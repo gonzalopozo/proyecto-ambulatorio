@@ -10,7 +10,8 @@ $allowedResourceTypes = [
     'doctors',
     'appointments',
     'consultations',
-    'medications'
+    'medications',
+    'medicines'
 ];
 
 // Validamos que el recurso este disponible
@@ -34,19 +35,16 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
 
             $resource = $dbConn->db_query($select_query);
 
-            echo $resource;
-
-            // echo json_encode($resource, true);
+            echo json_encode($resource, true);
         } else {
-            if (count($dbConn->db_query("SELECT * FROM $resourceType WHERE id = $resourceId")) > 0) {
-                $select_query = "SELECT * FROM $resourceType WHERE id = $resourceId)";
+            $exists_id_query = "SELECT * FROM $resourceType WHERE id = $resourceId";
+            $execute_exists_id_query = $dbConn->db_query($exists_id_query);
+            $idExits = count($execute_exists_id_query) > 0 ? true : false;
 
-                $resource = $dbConn->db_query($select_query);
-
-                echo json_encode($resource);
-                
+            if ($idExits) {
+                echo json_encode($execute_exists_id_query);
             } else {
-                echo json_encode(['error' => "Libro no encontrado"]);
+                echo json_encode(['error' => "$resourceType no encontrado"]);
             }
         }
 
@@ -58,13 +56,45 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
         // Tomamos la entrada "cruda"
         $json = file_get_contents('php://input');
 
-        // Transformamos el json recibido a un nuevo elemento del array
-        $books[] = json_decode($json, true);
+        $insertInfo = json_decode($json, true);
 
-        // Emitimos hacia la salida la ultima clave del arreglo de los libros, se hace por convención (el devolver el id del elemento añadido)
-        echo array_keys($books)[count($books) - 1];
+        $insert_query = "INSERT INTO $resourceType (";
 
-        // echo json_encode($books);
+        $insertInfoKeys = array_keys($insertInfo);
+
+        for ($i = 0; $i < count($insertInfoKeys); $i++) { 
+            if ((count($insertInfoKeys) - 1) == $i) {
+                $insert_query .= "$insertInfoKeys[$i]) ";
+            } else {
+                $insert_query .= "$insertInfoKeys[$i],";
+            }
+        }
+
+        $insert_query .= "VALUES (";
+
+        $insertInfoValues = array_values($insertInfo);
+
+        for ($i = 0; $i < count($insertInfoValues); $i++) { 
+            if ((count($insertInfoValues) - 1) == $i) {
+                $insert_query .= "'$insertInfoValues[$i]');";
+            } else {
+                $insert_query .= "'$insertInfoValues[$i]',";
+            }
+        }
+
+        $insertResource = $dbConn->real_query($insert_query);
+
+        if (isset($insertResource)) {
+            $select_inserted_resource = "SELECT id FROM $resourceType ORDER BY id DESC LIMIT 1";
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode(["ID del $resourceType añadido" => $resource[0]], true);
+        } else {
+            echo "\n$insert_query\n";
+            echo json_encode(['error' => "este $resourceType no se ha podido meter"]);
+        }
+
         break;
     
     case 'PUT':
