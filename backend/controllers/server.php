@@ -82,49 +82,73 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
             }
         }
 
-        $insertResource = $dbConn->real_query($insert_query);
-
-        if (isset($insertResource)) {
+        $insertResource = $dbConn->db_query($insert_query);
+        if (is_array($insertResource)) {
             $select_inserted_resource = "SELECT id FROM $resourceType ORDER BY id DESC LIMIT 1";
 
-            $resource = $dbConn->db_query($select_query);
+            $resource = $dbConn->db_query($select_inserted_resource);
 
-            echo json_encode(["ID del $resourceType añadido" => $resource[0]], true);
+            echo json_encode(["ID del $resourceType added" => $resource[0]], true);
         } else {
-            echo "\n$insert_query\n";
             echo json_encode(['error' => "este $resourceType no se ha podido meter"]);
         }
 
         break;
     
     case 'PUT':
+        $exists_id_query = "SELECT * FROM $resourceType WHERE id = $resourceId";
+        $execute_exists_id_query = $dbConn->db_query($exists_id_query);
+        $idExits = count($execute_exists_id_query) > 0 ? true : false;
+
         // Validamos que el recurso buscado exista
-        if (!empty($resourceId) && array_key_exists($resourceId, $books)) {
+        if (!empty($resourceId) && $idExits) {
             // Tomamos la entrada "cruda"
             $json = file_get_contents('php://input');
 
-            // Actualizamos el array de libros cambiando el libro con el id recibido ($resourceId) asignando como valor este el json recibido
-            $books[$resourceId] = json_decode($json, true);
+            $updateInfo = json_decode($json, true);
+            $lastKeyUpdateInfo = array_key_last($updateInfo);
 
-            // Emitimos hacia la salida la clave del arreglo de los libros del libro actualizado, se hace por convención (el devolver el id del elemento modificado)
-            echo array_keys($books)[$resourceId - 1];
+            $update_query = "UPDATE $resourceType SET ";
 
-            // Retornamos la coleccion modificada en formato JSON
-            // echo json_encode($books);
+            foreach ($updateInfo as $column => $value) {
+                if ($column == $lastKeyUpdateInfo) {
+                    $update_query .= "$column = '$value' ";
+                } else {
+                    $update_query .= "$column = '$value', ";
+                }
+            }
+
+            $update_query .= "WHERE id = $resourceId";
+
+            $updateResource = $dbConn->db_query($update_query);
+
+            if (is_array($updateResource)) {
+                echo json_encode(["ID del $resourceType modificado" => $resourceId], true);
+            }
+        } else {
+            echo json_encode(["error" => "este $resourceType no se ha podido actualizar"]);
         }
 
         break;
     
     case 'DELETE':
-        // Validamos que el recurso exista
-        if (!empty($resourceId) && array_key_exists($resourceId, $books)) { 
-            // En caso real, ejecutar sentencia SQL para borrar registro en BBDD
+        $exists_id_query = "SELECT * FROM $resourceType WHERE id = $resourceId";
+        $execute_exists_id_query = $dbConn->db_query($exists_id_query);
+        $idExits = count($execute_exists_id_query) > 0 ? true : false;
 
-            // Eliminamos el recurso
-            unset($books[$resourceId]);
+        // Validamos que el recurso buscado exista
+        if (!empty($resourceId) && $idExits) {
+            $delete_query = "DELETE FROM $resourceType WHERE id = $resourceId;";
 
-            // Retornamos la coleccion modificada en formato JSON
-            echo json_encode($books);
+            $deleteResource = $dbConn->db_query($delete_query);
+
+            $select_query = "SELECT * FROM $resourceType";
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else {
+            echo json_encode(["error" => "este $resourceType no se ha podido eliminar"]);
         }
 
         break;

@@ -196,7 +196,7 @@ class DatabaseConection extends mysqli {
                 throw new Exception("Error during the query: {$this->error}");
             }
         } catch (mysqli_sql_exception | Exception $e) { // Capturamos la excepción
-            print "\n\nError: {$e->getMessage()}\n\n";
+            // print "\n\nError: {$e->getMessage()}\n\n";
             $value = null;
         }
 
