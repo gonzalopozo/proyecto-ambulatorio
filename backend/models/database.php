@@ -54,14 +54,16 @@ class DatabaseConection extends mysqli {
                 email VARCHAR(255) UNIQUE NOT NULL,
                 dni CHAR(9) UNIQUE NOT NULL,
                 sex ENUM('male', 'female') NOT NULL,
-                born_date DATE NOT NULL
+                born_date DATE NOT NULL,
+                password VARCHAR(255) NOT NULL
             );",
             
             "CREATE TABLE doctors (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(70) NOT NULL,
                 email VARCHAR(255) UNIQUE NOT NULL,
-                specialty VARCHAR(100) NOT NULL
+                specialty VARCHAR(100) NOT NULL,
+                password VARCHAR(255) NOT NULL
             );",
             
             "CREATE TABLE appointments (
@@ -69,38 +71,34 @@ class DatabaseConection extends mysqli {
                 patient_id INT NOT NULL,
                 doctor_id INT NOT NULL,
                 appointment_date DATETIME NOT NULL,
+                symptomatology TEXT NOT NULL,
+                diagnosis TEXT,
                 FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
                 FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
             );",
             
-            "CREATE TABLE consultations (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                patient_id INT NOT NULL,
-                doctor_id INT NOT NULL,
-                appointment_id INT NOT NULL,
-                diagnosis TEXT NOT NULL,
-                symptomatology VARCHAR(100),
-                FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
-                FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
-                FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE
-            );",
-
             "CREATE TABLE medicines (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(255) NOT NULL UNIQUE
             );",
-            
-            "CREATE TABLE medications (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                patient_id INT NOT NULL,
-                consultation_id INT NOT NULL,
+
+            "CREATE TABLE appointment_medicines (
+                appointment_id INT NOT NULL,
                 medicine_id INT NOT NULL,
                 quantity SMALLINT NOT NULL,
                 frequency VARCHAR(255) NOT NULL,
+                PRIMARY KEY (appointment_id, medicine_id),
+                FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE CASCADE,
+                FOREIGN KEY (medicine_id) REFERENCES medicines(id) ON DELETE CASCADE
+            );",
+            
+            "CREATE TABLE patient_medicines (
+                patient_id INT NOT NULL,
+                medicine_id INT NOT NULL,
                 chronic TINYINT(1) NOT NULL,
-                number_days SMALLINT NOT NULL,
+                number_days SMALLINT,
+                PRIMARY KEY (patient_id, medicine_id),
                 FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
-                FOREIGN KEY (consultation_id) REFERENCES consultations(id) ON DELETE CASCADE,
                 FOREIGN KEY (medicine_id) REFERENCES medicines(id) ON DELETE CASCADE
             );"
         ];
@@ -115,53 +113,53 @@ class DatabaseConection extends mysqli {
 
     private function insertSampleData() {
         $tablesInserts = [
-            "INSERT INTO patients (name, email, dni, sex, born_date) VALUES 
-            ('John Doe', 'john.doe@example.com', '12345678A', 'male', '1985-04-15'),
-            ('Jane Smith', 'jane.smith@example.com', '23456789B', 'female', '1992-07-20'),
-            ('Carlos Ruiz', 'carlos.ruiz@example.com', '34567890C', 'male', '1980-02-11'),
-            ('Laura Garcia', 'laura.garcia@example.com', '45678901D', 'female', '1995-09-30'),
-            ('Mario Fernandez', 'mario.fernandez@example.com', '56789012E', 'male', '1978-01-22'),
-            ('Ana Lopez', 'ana.lopez@example.com', '67890123F', 'female', '2000-06-18');",
+            "INSERT INTO patients (name, email, dni, sex, born_date, password) VALUES
+            ('Juan Pérez', 'juan.perez@example.com', '12345678A', 'male', '1990-05-20', 'contraseña123'),
+            ('María Gómez', 'maria.gomez@example.com', '87654321B', 'female', '1985-08-15', 'admin2024'),
+            ('Pedro López', 'pedro.lopez@example.com', '45612378C', 'male', '2000-01-30', 'doctor@php'),
+            ('Ana Martínez', 'ana.martinez@example.com', '78945612D', 'female', '1995-12-10', 'usuario2023'),
+            ('Luis Ramírez', 'luis.ramirez@example.com', '15975346E', 'male', '1980-07-05', 'seguro!clave'),
+            ('Carmen Díaz', 'carmen.diaz@example.com', '96385274F', 'female', '1993-11-25', 'hospital1234');",
 
-            "INSERT INTO doctors (name, email, specialty) VALUES 
-            ('Dr. Alice Brown', 'alice.brown@hospital.com', 'Cardiology'),
-            ('Dr. Robert Wilson', 'robert.wilson@hospital.com', 'Neurology'),
-            ('Dr. Clara Martinez', 'clara.martinez@hospital.com', 'Pediatrics'),
-            ('Dr. David Johnson', 'david.johnson@hospital.com', 'Orthopedics'),
-            ('Dr. Elena Perez', 'elena.perez@hospital.com', 'Dermatology'),
-            ('Dr. Francisco Gomez', 'francisco.gomez@hospital.com', 'General Medicine');",
+            "INSERT INTO doctors (name, email, specialty, password) VALUES
+            ('Dr. Fernando Sánchez', 'fernando.sanchez@example.com', 'Cardiología', 'clinica!safe'),
+            ('Dra. Laura Fernández', 'laura.fernandez@example.com', 'Pediatría', 'paciente2025'),
+            ('Dr. José López', 'jose.lopez@example.com', 'Dermatología', 'consulta99'),
+            ('Dra. Elena García', 'elena.garcia@example.com', 'Medicina General', 'medicina@456'),
+            ('Dr. Javier Gómez', 'javier.gomez@example.com', 'Neurología', 'securepass!'),
+            ('Dra. Patricia Ramírez', 'patricia.ramirez@example.com', 'Ginecología', 'clave@segura');",
 
-            "INSERT INTO appointments (patient_id, doctor_id, appointment_date) VALUES 
-            (1, 1, '2024-11-28 09:00:00'),
-            (2, 2, '2024-11-28 10:30:00'),
-            (3, 3, '2024-11-29 14:00:00'),
-            (4, 4, '2024-11-30 11:00:00'),
-            (5, 5, '2024-12-01 08:30:00'),
-            (6, 6, '2024-12-01 13:15:00');",
+            "INSERT INTO appointments (patient_id, doctor_id, appointment_date, symptomatology, diagnosis) VALUES
+            (1, 5, '2024-11-28 10:00:00', 'Dolor de cabeza persistente', 'Migraña leve'),
+            (2, 1, '2024-11-28 12:30:00', 'Dolor en el pecho al hacer ejercicio', 'Angina de esfuerzo'),
+            (3, 2, '2024-11-29 09:00:00', 'Tos persistente y fiebre', 'Bronquitis aguda'),
+            (4, 3, '2024-11-29 11:15:00', 'Dolor abdominal frecuente', 'Gastritis crónica'),
+            (5, 4, '2024-11-30 14:45:00', 'Consulta de control anual', 'Todo normal'),
+            (6, 6, '2024-11-30 16:00:00', 'Erupción cutánea en brazos y espalda', 'Dermatitis de contacto');",
 
-            "INSERT INTO consultations (patient_id, doctor_id, appointment_id, diagnosis, symptomatology) VALUES 
-            (1, 1, 1, 'Hypertension', 'High blood pressure, headache'),
-            (2, 2, 2, 'Migraine', 'Severe headache, nausea'),
-            (3, 3, 3, 'Flu', 'Fever, cough, sore throat'),
-            (4, 4, 4, 'Fracture', 'Broken left arm, swelling'),
-            (5, 5, 5, 'Eczema', 'Itchy skin rash on arms'),
-            (6, 6, 6, 'Diabetes Type 2', 'Increased thirst, frequent urination');",
-
-            "INSERT INTO medicines (name) VALUES 
+            "INSERT INTO medicines (name) VALUES
             ('Paracetamol'),
-            ('Ibuprofen'),
-            ('Insulin'),
-            ('Antihistamines'),
-            ('Metformin'),
-            ('Amoxicillin');",
+            ('Ibuprofeno'),
+            ('Omeprazol'),
+            ('Salbutamol'),
+            ('Metformina'),
+            ('Amoxicilina');",
 
-            "INSERT INTO medications (patient_id, consultation_id, medicine_id, quantity, frequency, chronic, number_days) VALUES 
-            (1, 1, 1, 30, 'Twice a day', 1, 365),
-            (2, 2, 2, 20, 'Once a day', 0, 7),
-            (3, 3, 4, 15, 'Three times a day', 0, 10),
-            (4, 4, 6, 10, 'Once a day', 0, 14),
-            (5, 5, 5, 50, 'Twice a day', 1, 90),
-            (6, 6, 3, 25, 'Thrice a day', 1, 365);"
+            "INSERT INTO appointment_medicines (appointment_id, medicine_id, quantity, frequency) VALUES
+            (1, 1, 1, 'Cada 8 horas'),
+            (2, 2, 2, 'Cada 12 horas'),
+            (3, 4, 1, 'Cada 6 horas'),
+            (4, 3, 1, 'Antes de las comidas'),
+            (5, 1, 1, 'Cada 12 horas'),
+            (6, 6, 1, 'Cada 24 horas');",
+
+            "INSERT INTO patient_medicines (patient_id, medicine_id, chronic, number_days) VALUES
+            (1, 5, 1, 365),
+            (2, 3, 0, 14),
+            (3, 4, 0, 10),
+            (4, 6, 0, 7),
+            (5, 2, 0, 5),
+            (6, 1, 1, 365);"
         ];
 
         foreach ($tablesInserts as $insert) {

@@ -21,16 +21,39 @@ if (!in_array($resourceType, $allowedResourceTypes)) {
     die;
 }
 
-// Avisamos al cliente de que el contenido enviado es en formato JSON
+// Permitir solicitudes CORS
+header('Access-Control-Allow-Origin: *');
+
 header('Content-Type: application/json');
 
 // Levantamos el id del recurso buscado
 $resourceId = array_key_exists('resource_id', $_GET) ? $_GET['resource_id'] : '';
+$userEmail = array_key_exists('user_email', $_GET) ? $_GET['user_email'] : '';
+$userPassword = array_key_exists('user_password', $_GET) ? $_GET['user_password'] : '';
 
 // Generamos la respuesta asumiendo que el pedido es correcto
 switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
     case 'GET':
-        if (empty($resourceId)) {
+        if (!empty($userEmail) && !empty($userPassword)) {
+            $select_query = "SELECT 'patient' AS role, password, id 
+                            FROM patients 
+                            WHERE email = '$userEmail'
+
+                            UNION 
+
+                            SELECT 'doctor' AS role, password, id
+                            FROM doctors 
+                            WHERE email = '$userEmail';";
+
+            $execute_query = $dbConn->db_query($select_query);
+            $accountExits = count($execute_query) > 0 ? true : false;
+            if ($accountExits) {
+                if ($userPassword == $execute_query[0]['password']) {
+                    echo json_encode(["role" => $execute_query[0]["role"], "id" => $execute_query[0]["id"]]);
+                }
+            }
+
+        } else if (empty($resourceId)) {
             $select_query = "SELECT * FROM $resourceType";
 
             $resource = $dbConn->db_query($select_query);
