@@ -51,6 +51,8 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
                 if ($userPassword == $execute_query[0]['password']) {
                     echo json_encode(["role" => $execute_query[0]["role"], "id" => $execute_query[0]["id"]]);
                 }
+            } else {
+                echo json_encode(['error' => "Usuario no encontrado"]);
             }
 
         } else if (empty($resourceId)) {

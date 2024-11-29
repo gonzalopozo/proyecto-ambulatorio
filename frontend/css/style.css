@@ -1,62 +1,166 @@
+/* General */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Roboto", serif;
+    font-family: "Roboto", sans-serif;
     font-style: normal;
 }
 
 main {
-    width: 100dvw;
-    height: 100dvh;
     display: grid;
-    background-color: #aaaaaa;
+    place-items: center;
+    height: 100dvh;
+    width: 100dvw;
+    background: linear-gradient(135deg, #EAF6FF, #D6EAF8); /* Azul pastel */
 }
 
+/* Formulario */
 #login-form {
-    place-self: center;
-    padding: 24px;
-    border: 2px #595959 solid;
-    background-color: #FFF;
-    border-radius: 8px;
-}
-
-#login-form div {
-    margin: 16px;
-}
-
-#login-form div * {
-    display: block;
-}
-
-#login-form div label {
-    color: #7e7e7e;
-    font-weight: 600;
-    margin-bottom: 4px;
-    font-size: 20px;
-}
-
-#login-form div input[type="email"], #login-form div input[type="password"] {
-    border: .0625rem solid #2A3140;
-    border-radius: 8px;
-    outline: 0;
-    box-shadow: none;
-    padding: 8px;
-    background-color: #dbdbdb;
-    color: rgb(47, 47, 47);
-    font-size: 16px;
-    font-weight: 500;
-}
-
-#login-form div input[type="submit"] {
-    border: .0625rem solid #2A3140;
-    border-radius: 16px;
-    outline: 0;
-    box-shadow: none;
+    padding: 2rem;
+    border: 1px solid transparent;
+    border-radius: 12px;
     width: 100%;
-    padding: 8px;
-    background-color: #00b7ff;
-    color: rgb(32, 32, 32);
-    font-size: 24px;
-    font-weight: 600;
+    max-width: 360px;
+    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #85C1E9, #D4E6F1) border-box; /* Borde de gradiente */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover del formulario */
+#login-form:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Div del formulario */
+#login-form div:not(.login-form-submit) {
+    margin-bottom: 1.5rem;
+}
+
+/* Etiquetas */
+#login-form div label {
+    color: #2C3E50; /* Azul oscuro */
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Campos de entrada */
+#login-form div input[type="email"], 
+#login-form div input[type="password"] {
+    width: 100%;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    background-color: #F7FBFE; /* Azul muy claro */
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+/* Hover y focus en los campos */
+#login-form div input[type="email"]:focus, 
+#login-form div input[type="password"]:focus {
+    border-color: rgb(93, 173, 226); /* Azul intenso */
+    outline: none;
+    background-color: #EBF6FF;
+    box-shadow: 0 0 8px rgba(93, 173, 226, 0.5);
+}
+
+/* Botón de enviar */
+#login-form div input[type="submit"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #5DADE2, #85C1E9); /* Degradado azul */
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover del botón */
+#login-form div input[type="submit"]:hover {
+    background: linear-gradient(135deg, #3498DB, #5DADE2); /* Azul más intenso */
+    transform: translateY(-.5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsividad
+@media (max-width: 480px) {
+    #login-form {
+        padding: 1.5rem;
+    }
+
+    #login-form div input[type="email"], 
+    #login-form div input[type="password"], 
+    #login-form div input[type="submit"] {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+} */
+
+
+
+/* Estilos página 404 */
+/* Fondo de la página */
+.error-main {
+    height: 100dvh;
+    width: 100dvw;
+    background: linear-gradient(135deg, #FFFFFF, #D6EAF8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor principal */
+.error-container {
+    text-align: center;
+    padding: 2rem;
+    background-color: #fff;
+    border: 1px solid #AED6F1;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+/* Título del error */
+.error-container h1 {
+    font-size: 6rem;
+    color: #5DADE2; /* Azul intenso */
+    margin-bottom: 1rem;
+}
+
+/* Mensaje descriptivo */
+.error-container p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+/* Botón */
+.error-container .back-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #85C1E9; /* Azul cielo */
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover y active del botón */
+.error-container .back-button:hover {
+    background-color: #5DADE2; /* Azul más intenso */
+    transform: translateY(-2px);
+}
+
+.error-container .back-button:active {
+    transform: translateY(0);
 }

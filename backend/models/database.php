@@ -114,20 +114,20 @@ class DatabaseConection extends mysqli {
     private function insertSampleData() {
         $tablesInserts = [
             "INSERT INTO patients (name, email, dni, sex, born_date, password) VALUES
-            ('Juan Pérez', 'juan.perez@example.com', '12345678A', 'male', '1990-05-20', 'contraseña123'),
-            ('María Gómez', 'maria.gomez@example.com', '87654321B', 'female', '1985-08-15', 'admin2024'),
-            ('Pedro López', 'pedro.lopez@example.com', '45612378C', 'male', '2000-01-30', 'doctor@php'),
-            ('Ana Martínez', 'ana.martinez@example.com', '78945612D', 'female', '1995-12-10', 'usuario2023'),
-            ('Luis Ramírez', 'luis.ramirez@example.com', '15975346E', 'male', '1980-07-05', 'seguro!clave'),
-            ('Carmen Díaz', 'carmen.diaz@example.com', '96385274F', 'female', '1993-11-25', 'hospital1234');",
+            ('Juan Pérez', 'juan.perez@example.com', '12345678A', 'male', '1990-05-20', 'Secure!2024'),
+            ('María Gómez', 'maria.gomez@example.com', '87654321B', 'female', '1985-08-15', 'Passw0rd$123'),
+            ('Pedro López', 'pedro.lopez@example.com', '45612378C', 'male', '2000-01-30', 'D4me@Time!'),
+            ('Ana Martínez', 'ana.martinez@example.com', '78945612D', 'female', '1995-12-10', 'Alpha#9876'),
+            ('Luis Ramírez', 'luis.ramirez@example.com', '15975346E', 'male', '1980-07-05', 'Str0ng&P@ss'),
+            ('Carmen Díaz', 'carmen.diaz@example.com', '96385274F', 'female', '1993-11-25', 'Code!123Go');",
 
             "INSERT INTO doctors (name, email, specialty, password) VALUES
-            ('Dr. Fernando Sánchez', 'fernando.sanchez@example.com', 'Cardiología', 'clinica!safe'),
-            ('Dra. Laura Fernández', 'laura.fernandez@example.com', 'Pediatría', 'paciente2025'),
-            ('Dr. José López', 'jose.lopez@example.com', 'Dermatología', 'consulta99'),
-            ('Dra. Elena García', 'elena.garcia@example.com', 'Medicina General', 'medicina@456'),
-            ('Dr. Javier Gómez', 'javier.gomez@example.com', 'Neurología', 'securepass!'),
-            ('Dra. Patricia Ramírez', 'patricia.ramirez@example.com', 'Ginecología', 'clave@segura');",
+            ('Dr. Fernando Sánchez', 'fernando.sanchez@example.com', 'Cardiología', 'P@ssword2024'),
+            ('Dra. Laura Fernández', 'laura.fernandez@example.com', 'Pediatría', 'My\$ecur3Key'),
+            ('Dr. José López', 'jose.lopez@example.com', 'Dermatología', 'R0ck&Roll!23'),
+            ('Dra. Elena García', 'elena.garcia@example.com', 'Medicina General', 'Sky@2024Blue'),
+            ('Dr. Javier Gómez', 'javier.gomez@example.com', 'Neurología', 'P@ssW0rd#Now'),
+            ('Dra. Patricia Ramírez', 'patricia.ramirez@example.com', 'Ginecología', 'B1g\$Tr33&4U');",
 
             "INSERT INTO appointments (patient_id, doctor_id, appointment_date, symptomatology, diagnosis) VALUES
             (1, 5, '2024-11-28 10:00:00', 'Dolor de cabeza persistente', 'Migraña leve'),
