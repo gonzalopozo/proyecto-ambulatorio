@@ -59,13 +59,13 @@
                     <div>
                         <h3>Información general de la consulta</h3>
                         <label for="doctor-name">Nombre del doctor:</label>
-                        <input type="text" name="doctor-name" id="doctor-name" disabled>
+                        <input type="text" name="doctor-name" id="doctor-name" readonly>
 
                         <label for="patient-name">Nombre del paciente:</label>
-                        <input type="text" name="patient-name" id="patient-name" disabled>
+                        <input type="text" name="patient-name" id="patient-name" readonly>
 
                         <label for="appointment-date-time">Fecha:</label>
-                        <input type="datetime" name="appointment-date-time" id="appointment-date-time" disabled>
+                        <input type="datetime" name="appointment-date-time" id="appointment-date-time" readonly>
 
                         <label for="symptomatology">Sintomatología:</label>
                         <textarea name="symptomatology" id="symptomatology"></textarea>
@@ -74,10 +74,12 @@
                         <textarea name="diagnosis" id="diagnosis"></textarea>
                     </div>
 
-                    <div>
+                    <div class="medicines">
                         <h3>Medicación</h3>
                         <label for="medication-select">Medicamentos</label>
-                        <select name="medication" id="medication-select"></select>
+                        <select name="medication" id="medication-select">
+                            <option value="" disabled selected>Selecciona una opción</option>
+                        </select>
 
                         <label for="medication-quantity">Cantidad:</label>
                         <input type="text" name="medication-quantity" id="medication-quantity">
@@ -88,10 +90,12 @@
                         <label for="medication-duration">Número de días:</label>
                         <input type="text" name="medication-duration" id="medication-duration">
 
-                        <label for="chronic-condition">¿Crónica?:</label>
-                        <input type="checkbox" name="chronic-condition" id="chronic-condition">
+                        <div id="chronic">
+                            <input type="checkbox" name="chronic-condition" id="chronic-condition">
+                            <label for="chronic-condition">¿Crónica?</label>    
+                        </div>
 
-                        <button type="button" id="add-medication-btn">¡Añadir medicación!</button>
+                        <button type="button" class="intra-btn" id="add-medication-btn">¡Añadir medicación!</button>
 
                         <table>
                             <thead>
@@ -103,16 +107,19 @@
                                     <th>Crónica</th>
                                 </tr>
                             </thead>
+                            <tbody>
+
+                            </tbody>
                         </table>
                     </div>
 
                     <div>
                         <h3>PDF:</h3>
-                        <label for="upload-pdf">Subir PDF:</label>
+                        <label for="upload-pdf" accept=".pdf">Subir PDF:</label>
                         <input type="file" name="upload-pdf" id="upload-pdf">
                     </div>
 
-                    <div>
+                    <div class="new-Appt">
                         <h3>Pedir Cita</h3>
                         <form>
                             <label for="doctor-select">Selecciona un doctor:</label>
@@ -120,16 +127,27 @@
                             </select>
 
                             <label for="appointment-date">Selecciona una fecha y hora:</label>
-                            <input type="datetime-local" id="appointment-date" name="date">
+                            <input type="datetime-local" id="new-appointment-date" name="date">
 
                             <label for="appointment-symptomatology">Sintomatología:</label>
                             <textarea id="appointment-symptomatology" name="symptomatology"></textarea>
+
+                            <div class="errors" id="errors2">
+                                <span></span>
+                            </div>
                             
-                            <button type="submit" class="modal-submit-btn">Agendar</button>
+                            <button class="intra-btn"  id="create-Appointment">Agendar</button>
                         </form>
 
-                        <button type="submit" id="register-appointment-btn">¡Registrar!</button>
                     </div>
+
+                    <div class="errors">
+                        <span id="symptomatology-er"></span>
+                        <span id="diagnosis-er"></span>
+                    </div>
+
+                    <button class="modal-submit-btn" id="register-appointment-btn">¡Registrar!</button>
+
 
                 </form>
             </div>

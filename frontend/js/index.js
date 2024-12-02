@@ -1,11 +1,16 @@
 const formLogin = document.querySelector('#login-form');
 const formLoginEmail = document.querySelector('#email');
 const formLoginPassword = document.querySelector('#password');
+const errorsSpanEmail = document.querySelector('.errors #email');
+const errorsSpanPassword = document.querySelector('.errors #password');
+const errorsSpanNotFound = document.querySelector('.errors #not-found');
+
 
 let isEmailValid = false;
 let isPasswordValid = false;
 
 function changeInput(input) {
+    errorsSpanPassword.innerText = "";
     const inputValue = input.value;
     
     const inputType = input.type;
@@ -15,20 +20,24 @@ function changeInput(input) {
             input.style.borderColor = "rgb(93, 226, 102)";
             input.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
             isEmailValid = true;
+            errorsSpanEmail.innerText = "";
         } else {
             input.style.borderColor = "rgb(226, 93, 93)";
             input.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
             isEmailValid = false;
+            errorsSpanEmail.innerText = "Email introducido incorretamente";
         }
     } else if (inputType == "password") {
         if (inputValue.match(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)) {
             input.style.borderColor = "rgb(93, 226, 102)";
             input.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
             isPasswordValid = true;
+            errorsSpanPassword.innerText = "";
         } else {
             input.style.borderColor = "rgb(226, 93, 93)";
             input.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
             isPasswordValid = false;
+            errorsSpanPassword.innerText = "Contraseña no valida";
         }
     }
     
@@ -38,11 +47,12 @@ function resetInputs() {
     formLoginEmail.value = '';
     formLoginPassword.value = '';
 
-    formLoginEmail.style.borderColor = "#AAA";
-    formLoginEmail.style.boxShadow = "none";
+    formLoginEmail.style.borderColor = "rgb(226, 93, 93)";
+    formLoginEmail.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
 
-    formLoginPassword.style.borderColor = "#AAA";
-    formLoginPassword.style.boxShadow = "none";
+    formLoginPassword.style.borderColor = "rgb(226, 93, 93)";
+    formLoginPassword.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+
 }
 
 formLoginEmail.addEventListener('blur', (e) => {
@@ -86,7 +96,9 @@ formLogin.addEventListener('submit', (e) => {
                         location.assign(`../frontend/html/doctor.html?resource_id=${data.id}`);
                     }
                 } else {
+                    console.log("hola");
                     resetInputs();
+                    errorsSpanPassword.innerText = "Usuario no encontrado";
                 }
             } else {
                 resetInputs();

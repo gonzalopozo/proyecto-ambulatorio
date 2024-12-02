@@ -10,6 +10,7 @@ $allowedResourceTypes = [
     'doctors',
     'doctor_patients',
     'appointments',
+    'appointments_by_id',
     'appointments_for_doctors',
     'appointments_for_doctors_7_days',
     'medicines',
@@ -171,6 +172,12 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
                                 AND is_consultation_done = 0
                                 AND DATE(appointment_date) = CURDATE();";
             
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else if ($resourceType == "appointments_by_id" && !empty($resourceId)) {
+            $select_query = "SELECT patient_id, (SELECT name FROM patients WHERE id = appointments.patient_id) AS doctor_name, (SELECT name FROM doctors WHERE id = appointments.doctor_id) AS patient_name, appointment_date, symptomatology FROM appointments WHERE id = $resourceId;";
+
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);

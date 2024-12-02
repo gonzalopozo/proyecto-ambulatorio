@@ -100,8 +100,12 @@
                     <label for="appointment-date">Selecciona una fecha y hora:</label>
                     <input type="datetime-local" id="appointment-date" name="date">
 
+                    <div class="errors">
+                        <span></span>
+                    </div>
+
                     <label for="appointment-symptomatology">Sintomatología:</label>
-                    <textarea id="appointment-symptomatology" name="symptomatology"></textarea>
+                    <textarea placeholder="Rellena tu sintomatología de forma opcional" id="appointment-symptomatology" name="symptomatology"></textarea>
                     
                     <button type="submit" class="modal-submit-btn">Agendar</button>
                 </form>

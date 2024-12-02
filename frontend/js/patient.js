@@ -96,6 +96,8 @@ const modalDoctorsSelect = document.querySelector('#doctor-select');
 const modalAppointmentDate = document.querySelector('#appointment-date');
 const modalAppointmentSymptomatology = document.querySelector('#appointment-symptomatology');
 const modalSubmitBtn = document.querySelector('.modal-submit-btn');
+const userNameHeader = document.querySelector('.user-name-header');
+const errorsSpan = document.querySelector('.errors span');
 
 const modalPastAppointments = document.querySelector('.modal-past-appointments');
 const modalPastAppointmentsTitle = document.querySelector('.modal-title');
@@ -123,6 +125,18 @@ function getFormattedDate(date) {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+function esFechaMayor30Dias(fecha) {
+    const fechaActual = new Date();
+    
+    // Sumar 30 días a la fecha actual
+    const fechaLimite = new Date(fechaActual);
+    fechaLimite.setDate(fechaActual.getDate() + 30);
+
+    // Comparar si la fecha es igual o posterior a la fecha límite
+    return fecha >= fechaLimite;
+}
+
+
 const queryParams = new URLSearchParams(location.search);
 const id = parseInt(queryParams.get('resource_id'));
 
@@ -146,6 +160,7 @@ function selectPatientInfo(id) {
 
 selectPatientInfo(id).then(userInfo => {
     userName.innerText = userInfo.name;
+    userNameHeader.innerText = userInfo.name;
     userEmail.innerText = userInfo.email;
     userDni.innerText = userInfo.dni;
     userPhone.innerText = userInfo.phone;
@@ -353,7 +368,7 @@ selectDoctors(id).then(eachDoctor => {
 
 modalSubmitBtn.addEventListener('click', (e) => {
     e.preventDefault(); 
-    const newAppointmentDate = new Date(modalAppointmentDate.value);
+    var newAppointmentDate = new Date(modalAppointmentDate.value);
 
     const newAppointment = {
         patient_id: id,
@@ -361,31 +376,48 @@ modalSubmitBtn.addEventListener('click', (e) => {
         appointment_date: getFormattedDate(newAppointmentDate),
         symptomatology: modalAppointmentSymptomatology.value
     }
+    
 
     console.log(newAppointment);
     
+    let isDateValid = false;
 
-    fetch(`http://localhost/?resource_type=appointments`, {
-        method: 'POST', // Método HTTP
-        headers: {
-            'Content-Type': 'application/json', // Especificar que el cuerpo está en formato JSON
-        },
-        body: JSON.stringify(newAppointment)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la petición');
-            }
-            return response.json();
+    
+    if (newAppointmentDate < Date.now()) {
+        errorsSpan.innerText = "Fecha no valida";
+    } else if (newAppointmentDate.getDay() == 6 || newAppointmentDate.getDay() == 0) {
+        errorsSpan.innerText = "Por favor, elija un día laborable";
+    } else if (esFechaMayor30Dias(newAppointmentDate)) {
+        errorsSpan.innerText = "Tan malo no estarás. Pide una fecha como máximo 30 días en el futuro";
+    } else {
+        isDateValid = true;
+    }
+    
+    if (isDateValid) {
+        fetch(`http://localhost/?resource_type=appointments`, {
+            method: 'POST', // Método HTTP
+            headers: {
+                'Content-Type': 'application/json', // Especificar que el cuerpo está en formato JSON
+            },
+            body: JSON.stringify(newAppointment)
         })
-        .then(data => {
-            console.log(data);
-            
-            return data;            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            return false;
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la petición');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                
+                return data;            
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                return false;
+            });
+    }
+
+    
 });
 

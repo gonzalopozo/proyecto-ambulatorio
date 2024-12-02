@@ -287,6 +287,17 @@ section:hover {
     animation: fadeIn 0.4s ease-in-out;
 }
 
+#doctor-modal .modal-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: none;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
 /* Animaciones del modal */
 @keyframes fadeIn {
     from {
@@ -332,7 +343,7 @@ section:hover {
 }
 
 /* Estilo de los inputs y textarea dentro del modal */
-.modal-content label {
+.modal-content label:not(#chronic label) {
     display: block;
     margin: 1rem 0 0.5rem;
     font-weight: bold;
@@ -340,7 +351,7 @@ section:hover {
 }
 
 .modal-content select,
-.modal-content input,
+.modal-content input:not(input[type="checkbox"]),
 .modal-content textarea {
     width: 100%;
     padding: 0.8rem;
@@ -379,6 +390,233 @@ section:hover {
     section {
         max-width: 100%;
     }
+}
+
+/* Modal */
+#doctor-modal .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    overflow-y: auto; /* Habilitar desplazamiento si es necesario */
+}
+
+#doctor-modal .modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+#doctor-modal .modal-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 800px; /* Ampliar el ancho máximo */
+    max-height: 90vh; /* Limitar la altura para evitar desbordamientos */
+    overflow-y: auto; /* Agregar desplazamiento interno para contenido largo */
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#doctor-modal.hide .modal-content {
+    animation: fadeOut 0.4s ease-in-out;
+}
+
+@keyframes fadeOut {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+/* Botón para cerrar modal */
+#doctor-modal .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#doctor-modal .close-btn:hover {
+    color: #ff5252;
+}
+
+/* Estilo de los inputs y textarea dentro del modal */
+#doctor-modal label:not(#chronic label) {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    font-weight: bold;
+    color: #2C3E50;
+}
+
+#doctor-modal div:not(#chronic) {
+    border: 1.3px solid #D6DBDF;
+    margin: 4px;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+#chronic {
+    display: flex;
+    color: #2C3E50;
+    gap: 8px;
+    font-weight: bold;
+}
+
+.errors span {
+    text-align: center; /* Alinea el texto al centro */
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
+    color: rgb(202, 41, 41); /* Cambia el color del texto a rojo */
+    display: block;
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 600; /* Asegura que el texto ocupe toda la línea */
+}
+
+
+.doctor-container h2 {
+    margin: 1rem 0 1rem 0;
+}
+
+.doctor-container span {
+    margin: 0.3rem 0 0.3rem 0;
+}
+
+#doctor-modal div h3 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 1.8rem 0 1rem 0;
+}
+
+#doctor-modal select,
+#doctor-modal input:not(input[type="checkbox"]),
+#doctor-modal textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #D6DBDF;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+/* Botón de envío dentro del modal */
+#doctor-modal .modal-submit-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: block;
+    margin: 1rem auto 0 auto;
+    width: 60%;
+}
+
+#doctor-modal .modal-submit-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Botón de envío dentro del modal */
+.intra-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: block;
+    margin: 1rem auto 1rem auto;
+    width: 30%;
+}
+
+.intra-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #doctor-modal .modal-content {
+        width: 95%; /* Reducir el ancho en pantallas pequeñas */
+        max-height: 85vh; /* Asegurarse de que no desborde */
+    }
+}
+
+.medicines table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.medicines table th,
+.medicines table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #E5E8E8;
+    text-align: center;
+}
+
+.medicines table th {
+    background-color: #3498DB;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+}
+
+.medicines table tbody tr:nth-child(even) {
+    background-color: #F8F9F9;
+}
+
+.medicines table tbody tr:hover {
+    background-color: #D6EAF8;
+    cursor: pointer;
+}
+
+/* Estilo para los botones de la tabla */
+.medicines table button {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.medicines table button:hover {
+    background-color: #2980B9;
 }
 
 /* * Estilos página doctor */
@@ -499,119 +737,6 @@ section:hover {
 }
 
 /* Modal */
-#doctor-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
-}
-
-#doctor-modal.show {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-#doctor-modal .modal-content {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 500px;
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-/* Animaciones del modal */
-@keyframes fadeIn {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        transform: scale(1);
-        opacity: 1;
-    }
-    to {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-}
-
-#doctor-modal.hide #doctor-modal .modal-content {
-    animation: fadeOut 0.4s ease-in-out;
-}
-
-/* Botón para cerrar modal */
-#doctor-modal .close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #333333;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-#doctor-modal .close-btn:hover {
-    color: #ff5252;
-}
-
-/* Estilo de los inputs y textarea dentro del modal */
-#doctor-modal .modal-content label {
-    display: block;
-    margin: 1rem 0 0.5rem;
-    font-weight: bold;
-    color: #2C3E50;
-}
-
-#doctor-modal .modal-content select,
-#doctor-modal .modal-content input,
-#doctor-modal .modal-content textarea {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #D6DBDF;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-}
-
-/* Botón de envío dentro del modal */
-#doctor-modal .modal-submit-btn {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    display: block;
-    margin: 1rem auto 0 auto;
-    width: 60%;
-}
-
-#doctor-modal .modal-submit-btn:hover {
-    background-color: #2980b9;
-}
 
 
 /* Estilos página 404 */
