@@ -3,10 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Patient</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
-    <h1>patient</h1>
+<body class="patient-body">
+    <header class="patient-header">
+        <h1>Bienvenido <span class="user-name-header"></span></h1>
+        <h3 class="hour">16:00</h3>
+    </header>
+    <main>
+        <div class="patient-container">
+            <section class="user-info">
+                <h5>Información personal:</h5>
+                <!-- <hr> -->
+    
+                <ul>
+                    <li>Nombre completo: <span class="user-name"></span></li>
+                    <li>Email: <span class="user-email"></span></li>
+                    <li>DNI: <span class="user-dni"></span></li>
+                    <li>Número de teléfono: <span class="user-phone"></span></li>
+                    <li>Dirección: <span class="user-address"></span></li>
+                    <li>Sexo: <span class="user-sex"></span></li>
+                    <li>Fecha de nacimiento: <span class="user-born-date"></span></li>
+                </ul>
+            </section>
+            
+            <section class="user-current-medication">
+                <h5>Medicación actual:</h5>
+                <!-- <hr> -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Posología</th>
+                            <th>¿Es cronica?</th>
+                            <th>Dejar de tomar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                </table>
+            </section>
+            
+            <section class="user-upcoming-appointments">
+                <h5>Proximas citas:</h5>
+                <!-- <hr> -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Médico</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </section>
+    
+            <section class="user-past-appointments">
+                <h5>Consultas pasadas:</h5>
+                <!-- <hr> -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Médico</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </section>
+    
+            <button class="user-make-appointment-btn">¡Pedir cita!</button>
+    
+        </div>
+        
+        <div class="modal" id="modal-new-appointment">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Pedir Cita</h2>
+                <form>
+                    <label for="doctor-select">Selecciona un doctor:</label>
+                    <select id="doctor-select" name="doctor">
+                    </select>
+
+                    <label for="appointment-date">Selecciona una fecha y hora:</label>
+                    <input type="datetime-local" id="appointment-date" name="date">
+
+                    <label for="appointment-symptomatology">Sintomatología:</label>
+                    <textarea id="appointment-symptomatology" name="symptomatology"></textarea>
+                    
+                    <button type="submit" class="modal-submit-btn">Agendar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal modal-past-appointments">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2 class="modal-title"></h2>
+                <p>Doctor: <span class="modal-doctor-name"></span></p>
+                <p>Fecha: <span class="modal-appointment-date"></span></p>
+                <p>Sintomatología: <span class="modal-symptomatology"></span></p>
+                <p>Diagnóstico <span class="modal-diagnosis"></span></p>
+                <p>PDF: <span class="modal-pdf-attachment"></span></p>
+                <p>Medicamento recetado: <span class="modal-medication"></span></p>
+                <p>Posología: <span class="modal-posology"></span></p>
+                <p>¿Crónico? <span class="modal-chronic"></span></p>
+                <p>Duración: <span class="modal-duration"></span></p>
+            </div>
+        </div>
+        
+        
+
+    </main>
     <script src="../js/patient.js"></script>
 </body>
 </html>

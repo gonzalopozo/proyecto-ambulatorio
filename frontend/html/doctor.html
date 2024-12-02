@@ -3,9 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Doctor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <h1>doctor</h1>
+    <header>
+        <h1>Bienvenido <span class="doctor-name-header"></span></h1>
+        <h3 class="hour">16:00</h3>
+    </header>
+
+    <main>
+        <div class="doctor-container">
+            <section class="doctor-info">
+                <h5>Información personal:</h5>
+                <ul>
+                    <li>Nombre completo: <span class="doctor-name"></span></li>
+                    <li>Email: <span class="doctor-email"></span></li>
+                    <li>Número de teléfono: <span class="doctor-phone"></span></li>
+                    <li>Especialidad: <span class="doctor-specialty"></span></li>
+                </ul>
+            </section>
+    
+            <section class="doctor-appointments-next-seven-days">
+                <span></span>
+                <h5>Consultas en los próximos siete días</h5>
+            </section>
+    
+            <section class="doctor-today-appointments">
+                <h5>Consultas de hoy:</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Paciente</th>
+                            <th>Sintomatología</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <div class="modal" id="doctor-modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Consulta:</h2>
+                <form class="main-appointment-form">
+
+                    <div>
+                        <h3>Información general de la consulta</h3>
+                        <label for="doctor-name">Nombre del doctor:</label>
+                        <input type="text" name="doctor-name" id="doctor-name" disabled>
+
+                        <label for="patient-name">Nombre del paciente:</label>
+                        <input type="text" name="patient-name" id="patient-name" disabled>
+
+                        <label for="appointment-date-time">Fecha:</label>
+                        <input type="datetime" name="appointment-date-time" id="appointment-date-time" disabled>
+
+                        <label for="symptomatology">Sintomatología:</label>
+                        <textarea name="symptomatology" id="symptomatology"></textarea>
+
+                        <label for="diagnosis">Diagnóstico:</label>
+                        <textarea name="diagnosis" id="diagnosis"></textarea>
+                    </div>
+
+                    <div>
+                        <h3>Medicación</h3>
+                        <label for="medication-select">Medicamentos</label>
+                        <select name="medication" id="medication-select"></select>
+
+                        <label for="medication-quantity">Cantidad:</label>
+                        <input type="text" name="medication-quantity" id="medication-quantity">
+
+                        <label for="medication-frequency">Frecuencia:</label>
+                        <input type="text" name="medication-frequency" id="medication-frequency">
+
+                        <label for="medication-duration">Número de días:</label>
+                        <input type="text" name="medication-duration" id="medication-duration">
+
+                        <label for="chronic-condition">¿Crónica?:</label>
+                        <input type="checkbox" name="chronic-condition" id="chronic-condition">
+
+                        <button type="button" id="add-medication-btn">¡Añadir medicación!</button>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Cantidad</th>
+                                    <th>Frecuencia</th>
+                                    <th>Número de días</th>
+                                    <th>Crónica</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h3>PDF:</h3>
+                        <label for="upload-pdf">Subir PDF:</label>
+                        <input type="file" name="upload-pdf" id="upload-pdf">
+                    </div>
+
+                    <div>
+                        <h3>Pedir Cita</h3>
+                        <form>
+                            <label for="doctor-select">Selecciona un doctor:</label>
+                            <select id="doctor-select" name="doctor">
+                            </select>
+
+                            <label for="appointment-date">Selecciona una fecha y hora:</label>
+                            <input type="datetime-local" id="appointment-date" name="date">
+
+                            <label for="appointment-symptomatology">Sintomatología:</label>
+                            <textarea id="appointment-symptomatology" name="symptomatology"></textarea>
+                            
+                            <button type="submit" class="modal-submit-btn">Agendar</button>
+                        </form>
+
+                        <button type="submit" id="register-appointment-btn">¡Registrar!</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/doctor.js"></script>
 </body>
 </html>

@@ -8,10 +8,12 @@ $dbConn = new DatabaseConection();
 $allowedResourceTypes = [
     'patients',
     'doctors',
+    'doctor_patients',
     'appointments',
-    'consultations',
-    'medications',
-    'medicines'
+    'appointments_for_doctors',
+    'appointments_for_doctors_7_days',
+    'medicines',
+    'appointment_medicines'
 ];
 
 // Validamos que el recurso este disponible
@@ -30,6 +32,8 @@ header('Content-Type: application/json');
 $resourceId = array_key_exists('resource_id', $_GET) ? $_GET['resource_id'] : '';
 $userEmail = array_key_exists('user_email', $_GET) ? $_GET['user_email'] : '';
 $userPassword = array_key_exists('user_password', $_GET) ? $_GET['user_password'] : '';
+$appointmentsStatus = array_key_exists('appointments_status', $_GET) ? $_GET['appointments_status'] : '';
+
 
 // Generamos la respuesta asumiendo que el pedido es correcto
 switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
@@ -58,6 +62,115 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
         } else if (empty($resourceId)) {
             $select_query = "SELECT * FROM $resourceType";
 
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else if ($resourceType === 'appointment_medicines') {
+            $select_query = "SELECT 
+                m.name AS medicine_name,
+                am.quantity,
+                am.frequency,
+                a.appointment_date,
+                am.duration_days,
+                am.chronic
+            FROM 
+                appointment_medicines am
+            JOIN 
+                medicines m ON am.medicine_id = m.id
+            JOIN 
+                appointments a ON am.appointment_id = a.id
+            WHERE 
+                a.patient_id = $resourceId;";
+
+            // print_r($resourceId);
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else if ($resourceType === 'appointments' && $appointmentsStatus == 'upcoming') {
+            $select_query = "SELECT id, (SELECT name FROM doctors WHERE id = appointments.doctor_id) as doctor_name, appointment_date FROM $resourceType WHERE is_consultation_done = 0 AND patient_id = $resourceId";
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else if ($resourceType === 'appointments' && $appointmentsStatus == 'past') {
+            $select_query = "SELECT id, (SELECT name FROM doctors WHERE id = appointments.doctor_id) as doctor_name, appointment_date FROM $resourceType WHERE is_consultation_done = 1 AND patient_id = $resourceId";
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else if ($resourceType === "appointments" && !empty($resourceId)) {
+            $select_query = "SELECT 
+                                d.name AS doctor_name,
+                                a.appointment_date,
+                                a.symptomatology,
+                                a.diagnosis,
+                                a.pdf_file,
+                                m.name AS medicine_name,
+                                am.quantity AS posology,
+                                am.frequency,
+                                am.duration_days,
+                                am.chronic
+                            FROM 
+                                appointments a
+                            JOIN 
+                                doctors d ON a.doctor_id = d.id
+                            LEFT JOIN 
+                                appointment_medicines am ON a.id = am.appointment_id
+                            LEFT JOIN 
+                                medicines m ON am.medicine_id = m.id
+                            WHERE 
+                                a.is_consultation_done = 1
+                                AND a.id = 1;";
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+
+        } else if ($resourceType == "doctor_patients" && !empty($resourceId)) {
+            $select_query = "SELECT doctor_id, (SELECT name FROM doctors WHERE id = doctor_patients.doctor_id) as name, (SELECT specialty FROM doctors WHERE id = doctor_patients.doctor_id) as specialty FROM $resourceType WHERE patient_id = $resourceId";
+
+            // $select_query = "SELECT 
+            //                     dp.doctor_id, 
+            //                     d.name, 
+            //                     d.specialty
+            //                 FROM 
+            //                     $resourceType dp
+            //                 JOIN 
+            //                     doctors d ON dp.doctor_id = d.id
+            //                 WHERE 
+            //                     dp.patient_id = 1;";
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else if ($resourceType == "appointments_for_doctors_7_days" && !empty($resourceId)) {
+            $select_query = "SELECT 
+                                id, 
+                                (SELECT name FROM patients WHERE id = appointments.patient_id) AS patient_name, 
+                                symptomatology 
+                            FROM 
+                                appointments 
+                            WHERE 
+                                doctor_id = $resourceId
+                                AND is_consultation_done = 0
+                                AND appointment_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY);";
+
+            $resource = $dbConn->db_query($select_query);
+
+            echo json_encode($resource, true);
+        } else if ($resourceType == "appointments_for_doctors" && !empty($resourceId)) {
+            $select_query = "SELECT 
+                                id, 
+                                (SELECT name FROM patients WHERE id = appointments.patient_id) AS patient_name, 
+                                symptomatology 
+                            FROM 
+                                appointments 
+                            WHERE 
+                                doctor_id = $resourceId
+                                AND is_consultation_done = 0
+                                AND DATE(appointment_date) = CURDATE();";
+            
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);

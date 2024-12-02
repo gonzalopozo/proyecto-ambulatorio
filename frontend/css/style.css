@@ -105,6 +105,515 @@ main {
 
 
 
+/* Estilos página pacientes */
+/* General */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #3498DB; /* Azul intenso */
+    color: #FFFFFF; /* Texto blanco */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 12px 12px;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+header h3 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    text-align: right;
+}
+
+.patient-container {
+    display: grid;
+    grid-template-areas:
+        "user-info user-current-medication user-current-medication"
+        "user-upcoming-appointments user-upcoming-appointments user-past-appointments"
+        "user-make-appointment-btn user-make-appointment-btn user-make-appointment-btn";
+    grid-gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+}
+
+/* Section Styling */
+section {
+    background-color: #FFFFFF;
+    border: 1px solid #D6DBDF;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    /* max-width: 500px; */
+}
+
+section:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.patient-container h5 {
+    font-size: 1.5rem;
+    color: #2E86C1; /* Azul medio */
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #AED6F1;
+    padding-bottom: 0.5rem;
+}
+
+.patient-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.patient-container ul li {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    color: #5D6D7E; /* Gris oscuro */
+}
+
+.patient-container table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.patient-container table th,
+.patient-container table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #E5E8E8;
+    text-align: center;
+}
+
+.patient-container table th {
+    background-color: #3498DB;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+}
+
+.patient-container table tbody tr:nth-child(even) {
+    background-color: #F8F9F9;
+}
+
+.patient-container table tbody tr:hover {
+    background-color: #D6EAF8;
+    cursor: pointer;
+}
+
+/* Grid Areas */
+.patient-container .user-info {
+    grid-area: user-info;
+}
+
+.patient-container .user-info ul li span {
+    font-weight: bold
+}
+
+.patient-container .user-current-medication {
+    grid-area: user-current-medication;
+}
+
+.patient-container .user-upcoming-appointments {
+    grid-area: user-upcoming-appointments;
+}
+
+.patient-container .user-past-appointments {
+    grid-area: user-past-appointments;
+}
+
+.patient-container .user-make-appointment-btn {
+    grid-area: user-make-appointment-btn;
+}
+
+/* MODAL */
+/* General */
+/* Botón para pedir cita */
+.user-make-appointment-btn {
+    background-color: #2E86C1;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.user-make-appointment-btn:hover {
+    background-color: #1A5276;
+    transform: scale(1.05);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Animaciones del modal */
+@keyframes fadeIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+.modal.hide .modal-content {
+    animation: fadeOut 0.4s ease-in-out;
+}
+
+/* Botón para cerrar modal */
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #ff5252;
+}
+
+/* Estilo de los inputs y textarea dentro del modal */
+.modal-content label {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    font-weight: bold;
+    color: #2C3E50;
+}
+
+.modal-content select,
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #D6DBDF;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+/* Botón de envío dentro del modal */
+.modal-submit-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: block;
+    margin: 1rem auto 0 auto;
+    width: 60%;
+}
+
+.modal-submit-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .patient-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    section {
+        max-width: 100%;
+    }
+}
+
+/* * Estilos página doctor */
+.doctor-container {
+    display: grid;
+    place-items: center;
+    height: 100dvh;
+    width: 100dvw;
+    grid-template-areas:
+        "user-info doctor-appointments-next-seven-days"
+        "doctor-today-appointments doctor-today-appointments";
+    grid-gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    background: linear-gradient(135deg, #EAF6FF, #D6EAF8);
+}
+
+.doctor-container .user-info {
+    grid-area: user-info;
+}
+
+.doctor-container .doctor-appointments-next-seven-days {
+    grid-area: doctor-appointments-next-seven-days;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.doctor-container .doctor-today-appointments {
+    grid-area: doctor-today-appointments;
+}
+
+.doctor-container .doctor-appointments-next-seven-days span {
+    font-size: 8rem;
+    color: #2E86C1;
+    font-weight: 900;
+    margin: 0 auto;
+}
+
+.doctor-container .doctor-appointments-next-seven-days h5 {
+    font-size: 1.5rem;
+    color: #2E86C1;
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+
+.doctor-container h5 {
+    font-size: 1.5rem;
+    color: #2E86C1;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #AED6F1;
+    padding-bottom: 0.5rem;
+}
+
+.doctor-container .doctor-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.doctor-container .doctor-info ul li {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    color: #5D6D7E;
+}
+
+.doctor-container .doctor-info ul li span {
+    font-weight: bold;
+}
+
+.doctor-container table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.doctor-container table th,
+.doctor-container table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #E5E8E8;
+    text-align: center;
+}
+
+.doctor-container table th {
+    background-color: #3498DB;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+}
+
+.doctor-container table tbody tr:nth-child(even) {
+    background-color: #F8F9F9;
+}
+
+.doctor-container table tbody tr:hover {
+    background-color: #D6EAF8;
+    cursor: pointer;
+}
+
+/* Estilo para los botones de la tabla */
+.doctor-container table button {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.doctor-container table button:hover {
+    background-color: #2980B9;
+}
+
+/* Modal */
+#doctor-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+}
+
+#doctor-modal.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#doctor-modal .modal-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Animaciones del modal */
+@keyframes fadeIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+#doctor-modal.hide #doctor-modal .modal-content {
+    animation: fadeOut 0.4s ease-in-out;
+}
+
+/* Botón para cerrar modal */
+#doctor-modal .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#doctor-modal .close-btn:hover {
+    color: #ff5252;
+}
+
+/* Estilo de los inputs y textarea dentro del modal */
+#doctor-modal .modal-content label {
+    display: block;
+    margin: 1rem 0 0.5rem;
+    font-weight: bold;
+    color: #2C3E50;
+}
+
+#doctor-modal .modal-content select,
+#doctor-modal .modal-content input,
+#doctor-modal .modal-content textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #D6DBDF;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+/* Botón de envío dentro del modal */
+#doctor-modal .modal-submit-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: block;
+    margin: 1rem auto 0 auto;
+    width: 60%;
+}
+
+#doctor-modal .modal-submit-btn:hover {
+    background-color: #2980b9;
+}
+
+
 /* Estilos página 404 */
 /* Fondo de la página */
 .error-main {
