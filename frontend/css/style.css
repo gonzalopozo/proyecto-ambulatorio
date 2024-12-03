@@ -7,15 +7,23 @@
     font-style: normal;
 }
 
-main {
-    display: grid;
-    place-items: center;
-    height: 100dvh;
-    width: 100dvw;
+@font-face {
+    font-family: 'DigitalClock';
+    src: url('http://localhost/font/DS-DIGII.TTF') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
     background: linear-gradient(135deg, #EAF6FF, #D6EAF8); /* Azul pastel */
 }
 
 /* Formulario */
+
+#login-main {
+    height: 100dvh;
+}
+
 #login-form {
     padding: 2rem;
     border: 1px solid transparent;
@@ -104,19 +112,23 @@ main {
 } */
 
 
-
 /* Estilos página pacientes */
 /* General */
+main {
+    display: grid;
+    place-items: center;
+    height: 90dvh;
+}
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    height: 10dvh;
+    padding: 1rem 6% 1rem 2%;
     background-color: #3498DB; /* Azul intenso */
     color: #FFFFFF; /* Texto blanco */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 0 0 12px 12px;
 }
 
 header h1 {
@@ -130,6 +142,13 @@ header h3 {
     text-align: right;
 }
 
+.clock {
+    font-family: 'DigitalClock', sans-serif;
+    color: white;
+    font-size: 4rem;
+}
+
+
 .patient-container {
     display: grid;
     grid-template-areas:
@@ -139,7 +158,6 @@ header h3 {
     grid-gap: 2rem;
     padding: 2rem;
     max-width: 1200px;
-    margin: 2rem auto;
 }
 
 /* Section Styling */
@@ -185,6 +203,10 @@ section:hover {
     overflow: hidden;
 }
 
+#hide {
+    display: none;
+}
+
 .patient-container table th,
 .patient-container table td {
     padding: 0.8rem;
@@ -206,7 +228,11 @@ section:hover {
 
 .patient-container table tbody tr:hover {
     background-color: #D6EAF8;
-    cursor: pointer;
+    /* cursor: pointer; */
+}
+
+.patient-container table tbody tr:hover *:not(.user-past-appointments table tbody tr:hover *) {
+    cursor: default;
 }
 
 /* Grid Areas */
@@ -359,6 +385,23 @@ section:hover {
     border-radius: 8px;
     margin-bottom: 1rem;
     font-size: 1rem;
+    resize: none;
+}
+
+.modal-content h2:not(.doctor-modal .modal-content h2) {
+    margin-bottom: 12px;
+    font-size: 2.2rem;
+}
+
+.doctor-modal .modal-content h2 {
+    margin: 12px;
+    font-weight: 700;
+    font-size: 2.2rem;
+}
+
+
+.modal-content span {
+    font-weight: bold;
 }
 
 /* Botón de envío dentro del modal */
@@ -478,11 +521,16 @@ section:hover {
     color: #2C3E50;
 }
 
-#doctor-modal div:not(#chronic) {
+#doctor-modal div:not(#chronic):not(.errors) {
     border: 1.3px solid #D6DBDF;
     margin: 4px;
     padding: 8px;
     border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.main-appointment-form div .errors {
+    margin: 8px;
 }
 
 #chronic {
@@ -513,8 +561,8 @@ section:hover {
 
 #doctor-modal div h3 {
     font-size: 1.3rem;
-    font-weight: 500;
-    margin: 1.8rem 0 1rem 0;
+    font-weight: 600;
+    margin: 1.3rem 0;
 }
 
 #doctor-modal select,
@@ -526,6 +574,7 @@ section:hover {
     border-radius: 8px;
     margin-bottom: 1rem;
     font-size: 1rem;
+    resize: none;
 }
 
 /* Botón de envío dentro del modal */
@@ -623,8 +672,6 @@ section:hover {
 .doctor-container {
     display: grid;
     place-items: center;
-    height: 100dvh;
-    width: 100dvw;
     grid-template-areas:
         "user-info doctor-appointments-next-seven-days"
         "doctor-today-appointments doctor-today-appointments";

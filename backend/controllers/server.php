@@ -25,8 +25,16 @@ if (!in_array($resourceType, $allowedResourceTypes)) {
 }
 
 // Permitir solicitudes CORS
+// Permitir solicitudes desde cualquier origen
 header('Access-Control-Allow-Origin: *');
 
+// Permitir los métodos HTTP especificados
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+
+// Permitir encabezados específicos
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+// Establecer el tipo de contenido como JSON
 header('Content-Type: application/json');
 
 // Levantamos el id del recurso buscado

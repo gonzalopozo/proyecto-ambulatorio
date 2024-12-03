@@ -12,8 +12,8 @@
 </head>
 <body>
     <header>
-        <h1>Bienvenido <span class="doctor-name-header"></span></h1>
-        <h3 class="hour">16:00</h3>
+        <h1>Bienvenido <span class="user-name-header"></span></h1>
+        <h3 class="clock"></h3>
     </header>
 
     <main>
@@ -30,7 +30,7 @@
     
             <section class="doctor-appointments-next-seven-days">
                 <span></span>
-                <h5>Consultas en los próximos siete días</h5>
+                <h5>consultas en los próximos siete días</h5>
             </section>
     
             <section class="doctor-today-appointments">
@@ -58,6 +58,10 @@
 
                     <div>
                         <h3>Información general de la consulta</h3>
+
+                        <input type="text" id="hide appointment-id">
+                        <input type="text" id="hide patient-id">
+
                         <label for="doctor-name">Nombre del doctor:</label>
                         <input type="text" name="doctor-name" id="doctor-name" readonly>
 
@@ -101,11 +105,19 @@
                             <label for="chronic-condition">¿Crónica?</label>    
                         </div>
 
+                        <div class="errors">
+                            <span id="medicine-er"></span>
+                            <span id="quantity-er"></span>
+                            <span id="frequency-er"></span>
+                            <span id="days-er"></span>
+                        </div>
+
                         <button type="button" class="intra-btn" id="add-medication-btn">¡Añadir medicación!</button>
 
                         <table>
                             <thead>
                                 <tr>
+                                    <th id="hide">id</th>
                                     <th>Medicamento</th>
                                     <th>Cantidad</th>
                                     <th>Frecuencia</th>
@@ -114,7 +126,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                <tr>
+                                    <td colspan="6">No se han añadido medicamentos</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -126,7 +140,7 @@
                     </div>
 
                     <div class="new-Appt">
-                        <h3>Pedir Cita</h3>
+                        <h3>Derivar Cita</h3>
                         <form>
                             <label for="doctor-select">Selecciona un doctor:</label>
                             <select id="doctor-select" name="doctor">
@@ -156,6 +170,7 @@
         </div>
     </main>
 
-    <script src="../js/doctor.js"></script>
+    <script type="module" src="../js/helpers/utils.mjs"></script>
+    <script type="module" src="../js/doctor.js"></script>
 </body>
 </html>

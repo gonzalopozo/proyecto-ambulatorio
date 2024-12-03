@@ -13,7 +13,7 @@
 <body class="patient-body">
     <header class="patient-header">
         <h1>Bienvenido <span class="user-name-header"></span></h1>
-        <h3 class="hour">16:00</h3>
+        <h3 class="clock"></h3>
     </header>
     <main>
         <div class="patient-container">
@@ -116,21 +116,25 @@
             <div class="modal-content">
                 <span class="close-btn">&times;</span>
                 <h2 class="modal-title"></h2>
-                <p>Doctor: <span class="modal-doctor-name"></span></p>
-                <p>Fecha: <span class="modal-appointment-date"></span></p>
-                <p>Sintomatología: <span class="modal-symptomatology"></span></p>
-                <p>Diagnóstico <span class="modal-diagnosis"></span></p>
-                <p>PDF: <span class="modal-pdf-attachment"></span></p>
-                <p>Medicamento recetado: <span class="modal-medication"></span></p>
-                <p>Posología: <span class="modal-posology"></span></p>
-                <p>¿Crónico? <span class="modal-chronic"></span></p>
-                <p>Duración: <span class="modal-duration"></span></p>
+                <div class="modal-content-info">
+                    <p>Doctor: <span class="modal-doctor-name"></span></p>
+                    <p>Fecha: <span class="modal-appointment-date"></span></p>
+                    <p>Sintomatología: <span class="modal-symptomatology"></span></p>
+                    <p>Diagnóstico: <span class="modal-diagnosis"></span></p>
+                    <p>PDF: <span class="modal-pdf-attachment"></span></p>
+                    <p>Medicamento recetado: <span class="modal-medication"></span></p>
+                    <p>Posología: <span class="modal-posology"></span></p>
+                    <p>¿Crónico? <span class="modal-chronic"></span></p>
+                    <p>Duración: <span class="modal-duration"></span></p>
+                </div>
             </div>
         </div>
         
         
 
     </main>
-    <script src="../js/patient.js"></script>
+
+    <script type="module" src="../js/helpers/utils.mjs"></script>
+    <script type="module" src="../js/patient.js"></script>
 </body>
 </html>

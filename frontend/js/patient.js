@@ -81,6 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
     
 });
 
+import utils from './helpers/utils.mjs';
+
+const clock = document.querySelector('.clock');
+
+utils.refreshClock(clock);
+
 
 const userName = document.querySelector('.user-name');
 const userEmail = document.querySelector('.user-email');
@@ -98,6 +104,7 @@ const modalAppointmentSymptomatology = document.querySelector('#appointment-symp
 const modalSubmitBtn = document.querySelector('.modal-submit-btn');
 const userNameHeader = document.querySelector('.user-name-header');
 const errorsSpan = document.querySelector('.errors span');
+const closeModalNewAppointmentBtn = document.querySelector("#modal-new-appointment div .close-btn");
 
 const modalPastAppointments = document.querySelector('.modal-past-appointments');
 const modalPastAppointmentsTitle = document.querySelector('.modal-title');
@@ -111,20 +118,6 @@ const modalPastAppointmentsPosology = document.querySelector('.modal-posology');
 const modalPastAppointmentsChronic = document.querySelector('.modal-chronic');
 const modalPastAppointmentsDuration = document.querySelector('.modal-duration');
 
-function getFormattedDate(date) {
-    
-    // Obtener partes de la fecha
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Mes (0-indexado)
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    
-    // Formatear la fecha
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
 function esFechaMayor30Dias(fecha) {
     const fechaActual = new Date();
     
@@ -135,6 +128,33 @@ function esFechaMayor30Dias(fecha) {
     // Comparar si la fecha es igual o posterior a la fecha límite
     return fecha >= fechaLimite;
 }
+
+modalAppointmentDate.addEventListener('blur', () => {
+    const appointmentDateValue = new Date(modalAppointmentDate.value);
+
+    if (appointmentDateValue < Date.now() || !modalAppointmentDate.value) {
+        errorsSpan.innerText = "Fecha no valida";
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getDay() == 6 || appointmentDateValue.getDay() == 0) {
+        errorsSpan.innerText = "Por favor, elija un día laborable";
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (esFechaMayor30Dias(appointmentDateValue)) {
+        errorsSpan.innerText = "Tan malo no estarás. Pide una fecha como máximo 30 días en el futuro";
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getHours() < 8 || appointmentDateValue.getHours() > 21) {
+        errorsSpan.innerText = "Por favor, elija un hora laborable";
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else {
+        errorsSpan.innerText = "";
+        modalAppointmentDate.style.borderColor = "rgb(93, 226, 102)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+    
+});
 
 
 const queryParams = new URLSearchParams(location.search);
@@ -160,7 +180,7 @@ function selectPatientInfo(id) {
 
 selectPatientInfo(id).then(userInfo => {
     userName.innerText = userInfo.name;
-    userNameHeader.innerText = userInfo.name;
+    userNameHeader.innerText = utils.takeJustName(userInfo.name);
     userEmail.innerText = userInfo.email;
     userDni.innerText = userInfo.dni;
     userPhone.innerText = userInfo.phone;
@@ -189,40 +209,56 @@ function selectCurrentMedication(id) {
 }
 
 selectCurrentMedication(id).then (currentMedication => {
-    currentMedication.forEach(medication => {
-        const tableRow = document.createElement('tr');
-        
-        const tableCellMedicineName = document.createElement('td');
-        const tableCellPosology = document.createElement('td');
-        const tableCellChronic = document.createElement('td');
-        const tableCellDurationDays = document.createElement('td');
-
-        tableCellMedicineName.innerText = medication.medicine_name;
-        tableCellPosology.innerText = `${medication.quantity} ${medication.frequency}`;
-        tableCellChronic.innerText = medication.chronic > 0 ? 'Si' : 'No';
-        if (tableCellChronic.innerText == 'No') {
-            let appointmentDate = new Date(medication.appointment_date);
-
-            console.log(appointmentDate.getDate());
-            console.log(medication.duration_days);
+    if (currentMedication.length > 0) {
+        currentMedication.forEach(medication => {
+            const tableRow = document.createElement('tr');
             
+            const tableCellMedicineName = document.createElement('td');
+            const tableCellPosology = document.createElement('td');
+            const tableCellChronic = document.createElement('td');
+            const tableCellDurationDays = document.createElement('td');
+    
+            tableCellMedicineName.innerText = medication.medicine_name;
+            tableCellPosology.innerText = `${medication.quantity} ${medication.frequency}`;
+            tableCellChronic.innerText = medication.chronic > 0 ? 'Si' : 'No';
+            if (tableCellChronic.innerText == 'No') {
+                let appointmentDate = new Date(medication.appointment_date);
+    
+                console.log(appointmentDate.getDate());
+                console.log(medication.duration_days);
+                
+    
+                appointmentDate.setDate(appointmentDate.getDate() + parseInt(medication.duration_days));
+    
+                console.log(appointmentDate);
+    
+                tableCellDurationDays.innerText = `${appointmentDate.getDate()}/${appointmentDate.getMonth() < 10 ? `0${appointmentDate.getMonth()}` : appointmentDate.getMonth()}/${appointmentDate.getFullYear()}`;    
+            } else {
+                tableCellDurationDays.innerText = "";
+            }
+            
+            tableRow.appendChild(tableCellMedicineName);
+            tableRow.appendChild(tableCellPosology);
+            tableRow.appendChild(tableCellChronic);
+            tableRow.appendChild(tableCellDurationDays);
+    
+            userCurrentMedicationTable.appendChild(tableRow);
+        });
+    } else {
+        const tableRow = document.createElement('tr');
 
-            appointmentDate.setDate(appointmentDate.getDate() + parseInt(medication.duration_days));
+        const tableLongCell = document.createElement('td');
 
-            console.log(appointmentDate);
+        tableLongCell.innerText = 'No se han encontrado medicamentos';
 
-            tableCellDurationDays.innerText = `${appointmentDate.getDate()}/${appointmentDate.getMonth() < 10 ? `0${appointmentDate.getMonth()}` : appointmentDate.getMonth()}/${appointmentDate.getFullYear()}`;    
-        } else {
-            tableCellDurationDays.innerText = "";
-        }
-        
-        tableRow.appendChild(tableCellMedicineName);
-        tableRow.appendChild(tableCellPosology);
-        tableRow.appendChild(tableCellChronic);
-        tableRow.appendChild(tableCellDurationDays);
+        tableLongCell.colSpan = 4;
+
+        tableRow.appendChild(tableLongCell);
 
         userCurrentMedicationTable.appendChild(tableRow);
-    });
+    }
+
+    
 });
 
 
@@ -235,35 +271,62 @@ function selectStatusAppointments(status, id) {
             return response.json();
         })
         .then(upcomingAppointments => {
-            upcomingAppointments.forEach(eachAppointment => {
+            if (upcomingAppointments.length > 0) {
+                upcomingAppointments.forEach(eachAppointment => {
+                    const tableRow = document.createElement('tr');
+                    
+                    const tableCellId = document.createElement('td');
+                    const tableCellDoctorName = document.createElement('td');
+                    const tableCellAppointmentDate = document.createElement('td');
+            
+                    tableCellId.innerText = eachAppointment.id;
+                    tableCellDoctorName.innerText = eachAppointment.doctor_name;
+            
+                    let appointmentDate = new Date(eachAppointment.appointment_date);
+            
+                    tableCellAppointmentDate.innerText = `${appointmentDate.getDate()}/${appointmentDate.getMonth() < 10 ? `0${appointmentDate.getMonth()}` : appointmentDate.getMonth()}/${appointmentDate.getFullYear()} a las ${appointmentDate.getHours() < 10 ? `0${appointmentDate.getHours()}` : appointmentDate.getHours()}:${appointmentDate.getMinutes() < 10 ? `0${appointmentDate.getMinutes()}` : appointmentDate.getMinutes()}`;    
+                    
+                    tableRow.appendChild(tableCellId);
+                    tableRow.appendChild(tableCellDoctorName);
+                    tableRow.appendChild(tableCellAppointmentDate);
+            
+                    if (status == 'upcoming') {
+                        userUpcomingAppointmentsTable.appendChild(tableRow)
+                    } else if (status == 'past') {
+                        tableRow.style.cursor = "pointer";
+                        userPastAppointmentsTable.appendChild(tableRow);
+    
+                        // Añadir un event listener al hacer clic en la fila para abrir el modal
+                        tableRow.addEventListener('click', () => {
+                            openPastAppointmentModal(eachAppointment.id);
+                        });
+                    }
+                });
+            } else if (status == 'upcoming') {
                 const tableRow = document.createElement('tr');
-                
-                const tableCellId = document.createElement('td');
-                const tableCellDoctorName = document.createElement('td');
-                const tableCellAppointmentDate = document.createElement('td');
-        
-                tableCellId.innerText = eachAppointment.id;
-                tableCellDoctorName.innerText = eachAppointment.doctor_name;
-        
-                let appointmentDate = new Date(eachAppointment.appointment_date);
-        
-                tableCellAppointmentDate.innerText = `${appointmentDate.getDate()}/${appointmentDate.getMonth() < 10 ? `0${appointmentDate.getMonth()}` : appointmentDate.getMonth()}/${appointmentDate.getFullYear()} a las ${appointmentDate.getHours() < 10 ? `0${appointmentDate.getHours()}` : appointmentDate.getHours()}:${appointmentDate.getMinutes() < 10 ? `0${appointmentDate.getMinutes()}` : appointmentDate.getMinutes()}`;    
-                
-                tableRow.appendChild(tableCellId);
-                tableRow.appendChild(tableCellDoctorName);
-                tableRow.appendChild(tableCellAppointmentDate);
-        
-                if (status == 'upcoming') {
-                    userUpcomingAppointmentsTable.appendChild(tableRow)
-                } else if (status == 'past') {
-                    userPastAppointmentsTable.appendChild(tableRow);
 
-                    // Añadir un event listener al hacer clic en la fila para abrir el modal
-                    tableRow.addEventListener('click', () => {
-                        openPastAppointmentModal(eachAppointment.id);
-                    });
-                }
-            });
+                const tableLongCell = document.createElement('td');
+        
+                tableLongCell.innerText = 'No se han encontrado proximas citas';
+        
+                tableLongCell.colSpan = 4;
+        
+                tableRow.appendChild(tableLongCell);
+        
+                userUpcomingAppointmentsTable.appendChild(tableRow);
+            } else if (status == 'past') {
+                const tableRow = document.createElement('tr');
+
+                const tableLongCell = document.createElement('td');
+        
+                tableLongCell.innerText = 'No se han encontrado citas pasadas';
+        
+                tableLongCell.colSpan = 4;
+        
+                tableRow.appendChild(tableLongCell);
+        
+                userPastAppointmentsTable.appendChild(tableRow);
+            }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -284,7 +347,7 @@ function openPastAppointmentModal(appointmentId) {
             let info = pastAppointmentInfo[0];
 
             // Rellenar el modal con la información de la cita pasada
-            modalPastAppointmentsTitle.innerText = `Consulta con el ID ${appointmentId}`;
+            modalPastAppointmentsTitle.innerText = `Consulta con el ID ${appointmentId}:`;
             modalPastAppointmentsDoctorName.innerText = info.doctor_name;
             
             let appointmentDate = new Date(info.appointment_date);
@@ -307,7 +370,7 @@ function openPastAppointmentModal(appointmentId) {
                     let durationDate = new Date(info.appointment_date);
 
                     durationDate.setDate(durationDate.getDate() + parseInt(info.duration_days));
-                    modalPastAppointmentsDuration.innerText = `hasta ${durationDate.getDate()}/${durationDate.getMonth() < 10 ? `0${durationDate.getMonth()}` : durationDate.getMonth()}/${durationDate.getFullYear()}`;
+                    modalPastAppointmentsDuration.innerText = `hasta el ${durationDate.getDate()}/${durationDate.getMonth() < 10 ? `0${durationDate.getMonth()}` : durationDate.getMonth()}/${durationDate.getFullYear()}`;
                 } else {
                     modalPastAppointmentsDuration.innerText = '';
                 }
@@ -366,30 +429,44 @@ selectDoctors(id).then(eachDoctor => {
 });
 
 
+
+
 modalSubmitBtn.addEventListener('click', (e) => {
     e.preventDefault(); 
-    var newAppointmentDate = new Date(modalAppointmentDate.value);
+    const appointmentDateValue = new Date(modalAppointmentDate.value);
 
     const newAppointment = {
         patient_id: id,
         doctor_id: parseInt(modalDoctorsSelect.selectedOptions[0].value),
-        appointment_date: getFormattedDate(newAppointmentDate),
+        appointment_date: utils.getFormattedDate(appointmentDateValue),
         symptomatology: modalAppointmentSymptomatology.value
     }
     
 
-    console.log(newAppointment);
+    console.log(appointmentDateValue);
     
     let isDateValid = false;
 
-    
-    if (newAppointmentDate < Date.now()) {
+    if (appointmentDateValue < Date.now() || !modalAppointmentDate.value) {
         errorsSpan.innerText = "Fecha no valida";
-    } else if (newAppointmentDate.getDay() == 6 || newAppointmentDate.getDay() == 0) {
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getDay() == 6 || appointmentDateValue.getDay() == 0) {
         errorsSpan.innerText = "Por favor, elija un día laborable";
-    } else if (esFechaMayor30Dias(newAppointmentDate)) {
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (esFechaMayor30Dias(appointmentDateValue)) {
         errorsSpan.innerText = "Tan malo no estarás. Pide una fecha como máximo 30 días en el futuro";
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getHours() < 8 || appointmentDateValue.getHours() > 21) {
+        errorsSpan.innerText = "Por favor, elija un hora laborable";
+        modalAppointmentDate.style.borderColor = "rgb(226, 93, 93)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
     } else {
+        errorsSpan.innerText = "";
+        modalAppointmentDate.style.borderColor = "rgb(93, 226, 102)";
+        modalAppointmentDate.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
         isDateValid = true;
     }
     
@@ -409,6 +486,17 @@ modalSubmitBtn.addEventListener('click', (e) => {
             })
             .then(data => {
                 console.log(data);
+
+                closeModalNewAppointmentBtn.click();
+
+                setTimeout(() => {
+                    modalDoctorsSelect.selectedIndex = 0;
+                    modalAppointmentDate.value = "";
+                    modalAppointmentSymptomatology.value = "";
+
+                    userUpcomingAppointmentsTable.innerText = "";
+                    selectStatusAppointments("upcoming", id);
+                }, 400);
                 
                 return data;            
             })

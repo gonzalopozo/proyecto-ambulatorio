@@ -50,6 +50,12 @@ document.addEventListener("DOMContentLoaded", (e) => {
     });
 });
 
+import utils from './helpers/utils.mjs';
+
+const clock = document.querySelector('.clock');
+
+utils.refreshClock(clock);
+
 const doctorName = document.querySelector('.doctor-name');
 const doctorEmail = document.querySelector('.doctor-email');
 const doctorPhone = document.querySelector('.doctor-phone');
@@ -57,6 +63,7 @@ const doctorSpecialty = document.querySelector('.doctor-specialty');
 const doctorAppointmentsNextSevenDays = document.querySelector('.doctor-appointments-next-seven-days span');
 const doctorTodayAppointmentsTable = document.querySelector('.doctor-today-appointments table tbody');
 const modal = document.querySelector(".modal");
+const userNameHeader = document.querySelector('.user-name-header');
 
 const appointmentDoctorName = document.querySelector('#doctor-name');
 const appointmentPatientName = document.querySelector('#patient-name');
@@ -75,6 +82,17 @@ const registerAppointmetnBtn = document.querySelector('#register-appointment-btn
 const errorsSpanSymptomatology = document.querySelector('.errors #symptomatology-er');
 const errorsSpanDiagnosis = document.querySelector('.errors #diagnosis-er');
 
+const errorsSpan2 = document.querySelector('#errors2 span');
+const btnNewAppointment = document.querySelector('#create-Appointment');
+const newAppointmentDateIn = document.querySelector('#new-appointment-date');
+
+const errorsMedicineName = document.querySelector('.errors #medicine-er');
+const errorsMedicineQuantity = document.querySelector('.errors #quantity-er');
+const errorsMedicineFrequency = document.querySelector('.errors #frequency-er');
+const errorsMedicineDays = document.querySelector('.errors #days-er');
+
+const appointmentIdInput = document.querySelector('.main-appointment-form #appointment-id');
+const patientIdInput = document.querySelector('.main-appointment-form #patient-id');
 
 const queryParams = new URLSearchParams(location.search);
 const id = parseInt(queryParams.get('resource_id'));
@@ -102,6 +120,7 @@ selectDoctorInfo(id).then(doctorInfo => {
     doctorEmail.innerText = doctorInfo.email;
     doctorPhone.innerText = doctorInfo.phone;
     doctorSpecialty.innerText = doctorInfo.specialty;
+    userNameHeader.innerText = `Dr. ${utils.takeJustName(doctorInfo.name)}`;
 });
 
 function selectAppointmentsNextSevenDays(id) {
@@ -154,34 +173,49 @@ function selectAppointmentsToday(id) {
 }
 
 selectAppointmentsToday(id).then(appointmentsToday => {
-    appointmentsToday.forEach(appointment => {
-        const tableRow = document.createElement('tr');
-        
-        const tableCellAppointmentId = document.createElement('td');
-        const tableCellPatient = document.createElement('td');
-        const tableCellSymptomatology = document.createElement('td');
-        const tableCellBtn = document.createElement('td');
-
-        const btnStartAppointment = document.createElement('button');
-        btnStartAppointment.innerText = '¡Iniciar consulta!';
-        btnStartAppointment.addEventListener('click', () => {
-            openAppointmentModal(appointment.id);
+    if (appointmentsToday.length > 0) {
+        appointmentsToday.forEach(appointment => {
+            const tableRow = document.createElement('tr');
+            
+            const tableCellAppointmentId = document.createElement('td');
+            const tableCellPatient = document.createElement('td');
+            const tableCellSymptomatology = document.createElement('td');
+            const tableCellBtn = document.createElement('td');
+    
+            const btnStartAppointment = document.createElement('button');
+            btnStartAppointment.innerText = '¡Iniciar consulta!';
+            btnStartAppointment.addEventListener('click', () => {
+                openAppointmentModal(appointment.id);
+            })
+    
+            tableCellBtn.appendChild(btnStartAppointment);
+    
+            tableCellAppointmentId.innerText = appointment.id;
+            tableCellPatient.innerText = appointment.patient_name;
+            tableCellSymptomatology.innerText = appointment.symptomatology;
+    
+            tableRow.appendChild(tableCellAppointmentId);
+            tableRow.appendChild(tableCellPatient);
+            tableRow.appendChild(tableCellSymptomatology);
+            tableRow.appendChild(tableCellBtn);
+    
+            doctorTodayAppointmentsTable.appendChild(tableRow);
         })
+    } else {
+        const tableRow = document.createElement('tr');
 
-        tableCellBtn.appendChild(btnStartAppointment);
+        const tableLongCell = document.createElement('td');
 
-        tableCellAppointmentId.innerText = appointment.id;
-        tableCellPatient.innerText = appointment.patient_name;
-        tableCellSymptomatology.innerText = appointment.symptomatology;
+        tableLongCell.innerText = 'No se han encontrado citas para hoy';
 
-        tableRow.appendChild(tableCellAppointmentId);
-        tableRow.appendChild(tableCellPatient);
-        tableRow.appendChild(tableCellSymptomatology);
-        tableRow.appendChild(tableCellBtn);
+        tableLongCell.colSpan = 4;
+
+        tableRow.appendChild(tableLongCell);
+
+        tableRow.style.cursor = "default";
 
         doctorTodayAppointmentsTable.appendChild(tableRow);
-
-    })
+    }
 });
 
 function openAppointmentModal(appointmentId) {
@@ -248,6 +282,8 @@ function fillInputs(appointmentId) {
             appointmentDateTime.value = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
             appointmentSymptomatology.innerText = appointmentInfo.symptomatology;
 
+            appointmentIdInput.innerText = appointmentId;
+
             selectDoctors(appointmentInfo.patient_id);
         })
         .catch(error => {
@@ -265,37 +301,167 @@ medicationCondition.addEventListener('click', () => {
     }
 });
 
-addMedicationBtn.addEventListener('click', () => {
-    const tableRow = document.createElement('tr');
+selectMedication.addEventListener('blur', () => {
+    const medicationId = selectMedication.selectedOptions[0].value;
 
-    const tableCellMedicineName = document.createElement('td');
-    const tableCellMedicineQuantity = document.createElement('td');
-    const tableCellMedicineFrequency = document.createElement('td');
-    const tableCellMedicineNumberDays = document.createElement('td');
-    const tableCellMedicineChronic = document.createElement('td');
-
-    if (medicationCondition.checked) {
-        tableCellMedicineName.innerText = selectMedication.selectedOptions[0].innerText;
-        tableCellMedicineQuantity.innerText = medicationQuantity.value;
-        tableCellMedicineFrequency.innerText = medicationFrequency.value;
-        tableCellMedicineNumberDays.innerText = "";
-        tableCellMedicineChronic.innerText = "Sí";
+    if (!medicationId) {
+        errorsMedicineName.innerText = "Medicamento no seleccionado";
+        selectMedication.style.borderColor = "rgb(226, 93, 93)";
+        selectMedication.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
     } else {
-        tableCellMedicineName.innerText = selectMedication.selectedOptions[0].innerText;
-        tableCellMedicineQuantity.innerText = medicationQuantity.value;
-        tableCellMedicineFrequency.innerText = medicationFrequency.value;
-        tableCellMedicineNumberDays.innerText = medicationDuration.value;
-        tableCellMedicineChronic.innerText = "No";
+        errorsMedicineName.innerText = "";
+        selectMedication.style.borderColor = "rgb(93, 226, 102)";
+        selectMedication.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+})
+
+medicationQuantity.addEventListener('blur', () => {
+    if (!medicationQuantity.value) {
+        errorsMedicineQuantity.innerText = "Cantidad de medicamento no indicada";
+        medicationQuantity.style.borderColor = "rgb(226, 93, 93)";
+        medicationQuantity.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else {
+        errorsMedicineQuantity.innerText = "";
+        medicationQuantity.style.borderColor = "rgb(93, 226, 102)";
+        medicationQuantity.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+})
+
+medicationFrequency.addEventListener('blur', () => {
+    if (!medicationFrequency.value) {
+        errorsMedicineFrequency.innerText = "Frecuencia de ingesta del medicamento no indicada";
+        medicationFrequency.style.borderColor = "rgb(226, 93, 93)";
+        medicationFrequency.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else {
+        errorsMedicineFrequency.innerText = "";
+        medicationFrequency.style.borderColor = "rgb(93, 226, 102)";
+        medicationFrequency.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+})
+
+medicationDuration.addEventListener('blur', () => {
+    if (!(medicationCondition.checked) && !(medicationDuration.value)) {
+        errorsMedicineDays.innerText = "Indica una duración de días o marca medicación cronica";
+        medicationDuration.style.borderColor = "rgb(226, 93, 93)";
+        medicationDuration.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else {
+        errorsMedicineFrequency.innerText = "";
+        medicationDuration.style.borderColor = "rgb(93, 226, 102)";
+        medicationDuration.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+})
+
+addMedicationBtn.addEventListener('click', () => {
+    const medicationId = selectMedication.selectedOptions[0].value;
+    const medicationName = selectMedication.selectedOptions[0].innerText;
+    const isChronic = medicationCondition.checked ? "Sí" : "No";
+    const numberOfDays = medicationCondition.checked ? "365" : medicationDuration.value;
+
+    let validMedication = true;
+
+    if (!medicationId) {
+        errorsMedicineName.innerText = "Medicamento no seleccionado";
+        selectMedication.style.borderColor = "rgb(226, 93, 93)";
+        selectMedication.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+
+        validMedication = false;
+    } else {
+        errorsMedicineName.innerText = "";
+        selectMedication.style.borderColor = "rgb(93, 226, 102)";
+        selectMedication.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
     }
 
-    tableRow.appendChild(tableCellMedicineName);
-    tableRow.appendChild(tableCellMedicineQuantity);
-    tableRow.appendChild(tableCellMedicineFrequency);
-    tableRow.appendChild(tableCellMedicineNumberDays);
-    tableRow.appendChild(tableCellMedicineChronic);
+    if (!medicationQuantity.value) {
+        errorsMedicineQuantity.innerText = "Cantidad de medicamento no indicada";
+        medicationQuantity.style.borderColor = "rgb(226, 93, 93)";
+        medicationQuantity.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
 
-    medicationTable.appendChild(tableRow);
+        validMedication = false;
+    } else {
+        errorsMedicineQuantity.innerText = "";
+        medicationQuantity.style.borderColor = "rgb(93, 226, 102)";
+        medicationQuantity.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+
+    if (!medicationFrequency.value) {
+        errorsMedicineFrequency.innerText = "Frecuencia de ingesta del medicamento no indicada";
+        medicationFrequency.style.borderColor = "rgb(226, 93, 93)";
+        medicationFrequency.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+
+        validMedication = false;
+    } else {
+        errorsMedicineFrequency.innerText = "";
+        medicationFrequency.style.borderColor = "rgb(93, 226, 102)";
+        medicationFrequency.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+
+    if (!(medicationCondition.checked) && !(medicationDuration.value)) {
+        errorsMedicineDays.innerText = "Indica una duración de días o marca medicación cronica";
+        medicationDuration.style.borderColor = "rgb(226, 93, 93)";
+        medicationDuration.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+
+        validMedication = false;
+    } else {
+        errorsMedicineDays.innerText = "";
+        medicationDuration.style.borderColor = "rgb(93, 226, 102)";
+        medicationDuration.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+
+    if (!validMedication) {
+        return;
+    }
+
+    const existingRow = [...medicationTable.querySelectorAll('tr')].find(row => 
+        row.cells[0] && row.cells[0].innerText === medicationId
+    );
+
+    if (existingRow) {
+        // Actualizar fila existente
+        existingRow.cells[1].innerText = medicationName;
+        existingRow.cells[2].innerText = medicationQuantity.value;
+        existingRow.cells[3].innerText = medicationFrequency.value;
+        existingRow.cells[4].innerText = numberOfDays;
+        existingRow.cells[5].innerText = isChronic;
+    } else {
+        // Crear nueva fila
+        const tableRow = document.createElement('tr');
+
+        const tableCellMedicineId = document.createElement('td');
+        tableCellMedicineId.id = "hide";
+        tableCellMedicineId.innerText = medicationId;
+
+        const tableCellMedicineName = document.createElement('td');
+        tableCellMedicineName.innerText = medicationName;
+
+        const tableCellMedicineQuantity = document.createElement('td');
+        tableCellMedicineQuantity.innerText = medicationQuantity.value;
+
+        const tableCellMedicineFrequency = document.createElement('td');
+        tableCellMedicineFrequency.innerText = medicationFrequency.value;
+
+        const tableCellMedicineNumberDays = document.createElement('td');
+        tableCellMedicineNumberDays.innerText = numberOfDays;
+
+        const tableCellMedicineChronic = document.createElement('td');
+        tableCellMedicineChronic.innerText = isChronic;
+
+        tableRow.appendChild(tableCellMedicineId);
+        tableRow.appendChild(tableCellMedicineName);
+        tableRow.appendChild(tableCellMedicineQuantity);
+        tableRow.appendChild(tableCellMedicineFrequency);
+        tableRow.appendChild(tableCellMedicineNumberDays);
+        tableRow.appendChild(tableCellMedicineChronic);
+
+        medicationTable.appendChild(tableRow);
+
+        // Si es la primera fila, elimina el mensaje de "No se han añadido medicamentos"
+        const noDataRow = medicationTable.querySelector('tbody tr td[colspan="6"]');
+        if (noDataRow) {
+            noDataRow.parentElement.remove();
+        }
+    }
 });
+
 
 function selectDoctors(id) {
     fetch(`http://localhost/?resource_type=doctor_patients&resource_id=${id}`)
@@ -315,12 +481,15 @@ function selectDoctors(id) {
             eachDoctor.forEach(doctor => {
                 // console.log(doctor);
                 
-                const selectOpt = document.createElement('option');
+                if (doctor.doctor_id != id) {
+                    const selectOpt = document.createElement('option');
         
-                selectOpt.value = doctor.doctor_id;
-                selectOpt.innerText = `${doctor.name} (${doctor.specialty})`;
+                    selectOpt.value = doctor.doctor_id;
+                    selectOpt.innerText = `${doctor.name} (${doctor.specialty})`;
+                    
+                    modalDoctorsSelect.appendChild(selectOpt);
+                }
                 
-                modalDoctorsSelect.appendChild(selectOpt);
             })
         })
         .catch(error => {
@@ -331,32 +500,96 @@ function selectDoctors(id) {
 
 registerAppointmetnBtn.addEventListener('click', (e) => {
     e.preventDefault();
+
+    let isAppointmentValid = true;
+
     if (appointmentSymptomatology.value == "") {
         errorsSpanSymptomatology.innerText = "Sintomatologia no introducida";
-        appointmentSymptomatology.borderColor = "1px solid red";
+        appointmentSymptomatology.style.borderColor = "rgb(226, 93, 93)";
+        appointmentSymptomatology.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+        isAppointmentValid = false;
     } else {
         errorsSpanSymptomatology.innerText = "";
+        appointmentSymptomatology.style.borderColor = "rgb(93, 226, 102)";
+        appointmentSymptomatology.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
     }
     
-    // console.log(appointmentDiagnosis.value);
-
     let string = appointmentDiagnosis.value;
 
-
-    
     if (string.length <= 0) {
         errorsSpanDiagnosis.innerText = "Diagnostico no introducido";
+        appointmentDiagnosis.style.borderColor = "rgb(226, 93, 93)";
+        appointmentDiagnosis.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+        isAppointmentValid = false;
     } else {
         errorsSpanDiagnosis.innerText = "";
+        appointmentDiagnosis.style.borderColor = "rgb(93, 226, 102)";
+        appointmentDiagnosis.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
     }
+
+    if (!isAppointmentValid) {
+        return;
+    }
+
+    const appointmentUpdate = {
+        id: appointmentIdInput.innerText,
+        patient_id: appointmentIdInput.innerText,
+        doctor_id: id,
+        appointment_date: utils.getFormattedDate(new Date(appointmentInfo.appointment_date)),
+        symptomatology: appointmentSymptomatology.innerText,
+        diagnosis: appointmentDiagnosis.innerText,
+        is_consultation_done: 1,
+        pdf_file: "none"
+    }
+
+    fetch(`http://localhost/?resource_type=appointments`, {
+        method: 'PUT', // Método HTTP
+        headers: {
+            'Content-Type': 'application/json', // Especificar que el cuerpo está en formato JSON
+        },
+        body: JSON.stringify(newAppointment)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la petición');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+
+            closeModalNewAppointmentBtn.click();
+
+            setTimeout(() => {
+                modalDoctorsSelect.selectedIndex = 0;
+                modalAppointmentDate.value = "";
+                modalAppointmentSymptomatology.value = "";
+
+                userUpcomingAppointmentsTable.innerText = "";
+                selectStatusAppointments("upcoming", id);
+            }, 400);
+            
+            return data;            
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            return false;
+        });
+
+
+
 });
 
 appointmentSymptomatology.addEventListener('blur', () => {
     if (appointmentSymptomatology.value == "") {
         errorsSpanSymptomatology.innerText = "Sintomatologia no introducida";
+        appointmentSymptomatology.style.borderColor = "rgb(226, 93, 93)";
+        appointmentSymptomatology.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
         // appointmentSymptomatology.border = "1px solid red";
     } else {
         errorsSpanSymptomatology.innerText = "";
+        appointmentSymptomatology.style.borderColor = "rgb(93, 226, 102)";
+        appointmentSymptomatology.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
     }
 });
 
@@ -367,23 +600,15 @@ appointmentDiagnosis.addEventListener('blur', () => {
 
     if (string.length <= 0) {
         errorsSpanDiagnosis.innerText = "Diagnostico no introducido";
+        appointmentDiagnosis.style.borderColor = "rgb(226, 93, 93)";
+        appointmentDiagnosis.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
         // appointmentDiagnosis.border = "1px solid red";
     } else {
         errorsSpanDiagnosis.innerText = "";
+        appointmentDiagnosis.style.borderColor = "rgb(93, 226, 102)";
+        appointmentDiagnosis.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
     }
 });
-
-
-appointmentDateTime.addEventListener('blur', () => {
-    if (newAppointmentDate < Date.now()) {
-        errorsSpan2.innerText = "Fecha no valida";
-    } else if (newAppointmentDate.getDay() == 6 || newAppointmentDate.getDay() == 0) {
-        errorsSpan2.innerText = "Por favor, elija un día laborable";
-    } else if (esFechaMayor30Dias(newAppointmentDate)) {
-        errorsSpan2.innerText = "Tan malo no estarás. Pide una fecha como máximo 30 días en el futuro";
-    } 
-});
-
 
 function esFechaMayor60Dias(fecha) {
     const fechaActual = new Date();
@@ -397,29 +622,67 @@ function esFechaMayor60Dias(fecha) {
 }
 
 
-const errorsSpan2 = document.querySelector('#errors2 span');
+newAppointmentDateIn.addEventListener('blur', () => {
+    const appointmentDateValue = new Date(newAppointmentDateIn.value);
 
-const btnNewAppointment = document.querySelector('#create-Appointment');
 
-const newAppointmentDateIn = document.querySelector('#new-appointment-date');
+    if (appointmentDateValue < Date.now() || !newAppointmentDateIn.value) {
+        errorsSpan2.innerText = "Fecha no valida";
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getDay() == 6 || appointmentDateValue.getDay() == 0) {
+        errorsSpan2.innerText = "Por favor, elija un día laborable";
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (esFechaMayor60Dias(appointmentDateValue)) {
+        errorsSpan2.innerText = "Tan malo no estarás. Pide una fecha como máximo 30 días en el futuro";
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getHours() < 8 || appointmentDateValue.getHours() > 21) {
+        errorsSpan2.innerText = "Por favor, elija un hora laborable";
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else {
+        errorsSpan2.innerText = "";
+        newAppointmentDateIn.style.borderColor = "rgb(93, 226, 102)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+    }
+});
+
+
+
+
+
+
 
 btnNewAppointment.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
-    let newAppointmentDate = new Date(newAppointmentDateIn.value);
 
-    console.log(newAppointmentDate);
-    
+    const appointmentDateValue = new Date(newAppointmentDateIn.value);
 
-    if (newAppointmentDate < Date.now()) {
+
+    if (appointmentDateValue < Date.now() || !newAppointmentDateIn.value) {
         errorsSpan2.innerText = "Fecha no valida";
-    } else if (newAppointmentDate.getDay() == 6 || newAppointmentDate.getDay() == 0) {
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getDay() == 6 || appointmentDateValue.getDay() == 0) {
         errorsSpan2.innerText = "Por favor, elija un día laborable";
-    } else if (esFechaMayor60Dias(newAppointmentDate)) {
-        errorsSpan2.innerText = "Tan malo no estarás. Pide una fecha como máximo 90 días en el futuro";
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (esFechaMayor60Dias(appointmentDateValue)) {
+        errorsSpan2.innerText = "Tan malo no estarás. Pide una fecha como máximo 30 días en el futuro";
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+    } else if (appointmentDateValue.getHours() < 8 || appointmentDateValue.getHours() > 21) {
+        errorsSpan2.innerText = "Por favor, elija un hora laborable";
+        newAppointmentDateIn.style.borderColor = "rgb(226, 93, 93)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
     } else {
         errorsSpan2.innerText = "";
+        newAppointmentDateIn.style.borderColor = "rgb(93, 226, 102)";
+        newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
     }
     
 })
