@@ -334,6 +334,8 @@ registerAppointmetnBtn.addEventListener('click', (e) => {
     if (appointmentSymptomatology.value == "") {
         errorsSpanSymptomatology.innerText = "Sintomatologia no introducida";
         appointmentSymptomatology.borderColor = "1px solid red";
+    } else {
+        errorsSpanSymptomatology.innerText = "";
     }
     
     // console.log(appointmentDiagnosis.value);
@@ -352,7 +354,9 @@ registerAppointmetnBtn.addEventListener('click', (e) => {
 appointmentSymptomatology.addEventListener('blur', () => {
     if (appointmentSymptomatology.value == "") {
         errorsSpanSymptomatology.innerText = "Sintomatologia no introducida";
-        appointmentSymptomatology.border = "1px solid red";
+        // appointmentSymptomatology.border = "1px solid red";
+    } else {
+        errorsSpanSymptomatology.innerText = "";
     }
 });
 
@@ -363,7 +367,9 @@ appointmentDiagnosis.addEventListener('blur', () => {
 
     if (string.length <= 0) {
         errorsSpanDiagnosis.innerText = "Diagnostico no introducido";
-        appointmentDiagnosis.border = "1px solid red";
+        // appointmentDiagnosis.border = "1px solid red";
+    } else {
+        errorsSpanDiagnosis.innerText = "";
     }
 });
 
