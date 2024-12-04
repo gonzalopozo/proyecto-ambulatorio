@@ -91,8 +91,9 @@ const errorsMedicineQuantity = document.querySelector('.errors #quantity-er');
 const errorsMedicineFrequency = document.querySelector('.errors #frequency-er');
 const errorsMedicineDays = document.querySelector('.errors #days-er');
 
-const appointmentIdInput = document.querySelector('.main-appointment-form #appointment-id');
-const patientIdInput = document.querySelector('.main-appointment-form #patient-id');
+const appointmentIdInput = document.querySelector('.appointment-id');
+const patientIdInput = document.querySelector('.patient-id');
+const closeModalBtn = document.querySelector("#doctor-modal div .close-btn");
 
 const queryParams = new URLSearchParams(location.search);
 const id = parseInt(queryParams.get('resource_id'));
@@ -283,6 +284,9 @@ function fillInputs(appointmentId) {
             appointmentSymptomatology.innerText = appointmentInfo.symptomatology;
 
             appointmentIdInput.innerText = appointmentId;
+            patientIdInput.innerText = "";
+
+            patientIdInput.innerText = appointmentInfo.patient_id;
 
             selectDoctors(appointmentInfo.patient_id);
         })
@@ -533,43 +537,94 @@ registerAppointmetnBtn.addEventListener('click', (e) => {
 
     const appointmentUpdate = {
         id: appointmentIdInput.innerText,
-        patient_id: appointmentIdInput.innerText,
+        patient_id: patientIdInput.innerText,
         doctor_id: id,
-        appointment_date: utils.getFormattedDate(new Date(appointmentInfo.appointment_date)),
-        symptomatology: appointmentSymptomatology.innerText,
-        diagnosis: appointmentDiagnosis.innerText,
+        appointment_date: utils.getFormattedDate(new Date(appointmentDateTime.value)),
+        symptomatology: appointmentSymptomatology.value,
+        diagnosis: appointmentDiagnosis.value,
         is_consultation_done: 1,
         pdf_file: "none"
     }
 
-    fetch(`http://localhost/?resource_type=appointments`, {
+    console.log(appointmentUpdate);
+
+    fetch(`http://localhost/?resource_type=appointments&resource_id=${appointmentIdInput.innerText}`, {
         method: 'PUT', // Método HTTP
         headers: {
             'Content-Type': 'application/json', // Especificar que el cuerpo está en formato JSON
         },
-        body: JSON.stringify(newAppointment)
+        body: JSON.stringify(appointmentUpdate)
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Error en la petición');
             }
+
+            console.log(response);
+            
             return response.json();
         })
         .then(data => {
             console.log(data);
 
-            closeModalNewAppointmentBtn.click();
+            closeModalBtn.click();
 
             setTimeout(() => {
-                modalDoctorsSelect.selectedIndex = 0;
-                modalAppointmentDate.value = "";
-                modalAppointmentSymptomatology.value = "";
 
-                userUpcomingAppointmentsTable.innerText = "";
-                selectStatusAppointments("upcoming", id);
+                appointmentDoctorName.value = "";
+                appointmentPatientName.value = "";
+
+                appointmentDateTime.value = "";
+                appointmentSymptomatology.innerText = "";
+
+                appointmentIdInput.innerText = "";
+                patientIdInput.innerText = "";
+
+                modalDoctorsSelect.innerText = "";
+
+                selectAppointmentsToday(id);
+
             }, 400);
+
+            const medicationsRows = medicationTable.querySelectorAll('tr');
+
+            if (medicationsRows) {
+                
+                medicationsRows.forEach(row => {
+                    const newAppointmentMedication = {
+                        appointment_id:  appointmentIdInput.innerText,
+                        medicine_id: row.cells[0].innerText,
+                        quantity: row.cells[2].innerText,
+                        frequency: row.cells[3].innerText,
+                        duration_days: row.cells[4].innerText,
+                        chronic: row.cells[5] == "Sí" ? 1 : 0
+                    }
+
+                    console.log(newAppointmentMedication);
+                    
+
+                    fetch(`http://localhost/?resource_type=appointment_medicines`, {
+                        method: 'POST', // Método HTTP
+                        headers: {
+                            'Content-Type': 'application/json', // Especificar que el cuerpo está en formato JSON
+                        },
+                        body: JSON.stringify(newAppointmentMedication)
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error en la petición');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data);
+                        })
+                    
+                })
+
+                
+            }
             
-            return data;            
         })
         .catch(error => {
             console.error('Error:', error);
@@ -661,7 +716,6 @@ btnNewAppointment.addEventListener('click', (e) => {
     e.stopImmediatePropagation();
 
     const appointmentDateValue = new Date(newAppointmentDateIn.value);
-
 
     if (appointmentDateValue < Date.now() || !newAppointmentDateIn.value) {
         errorsSpan2.innerText = "Fecha no valida";
