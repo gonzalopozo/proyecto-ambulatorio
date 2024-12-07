@@ -299,6 +299,9 @@ function fillInputs(appointmentId) {
 medicationCondition.addEventListener('click', () => {
     if (medicationCondition.checked) {
         medicationDuration.value = "";
+        errorsMedicineDays.innerText = "";
+        medicationDuration.style.border = "1px solid #D6DBDF";
+        medicationDuration.style.boxShadow = "none";
         medicationDuration.disabled = true;
     } else {
         medicationDuration.disabled = false;
@@ -349,7 +352,7 @@ medicationDuration.addEventListener('blur', () => {
         medicationDuration.style.borderColor = "rgb(226, 93, 93)";
         medicationDuration.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
     } else {
-        errorsMedicineFrequency.innerText = "";
+        errorsMedicineDays.innerText = "";
         medicationDuration.style.borderColor = "rgb(93, 226, 102)";
         medicationDuration.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
     }

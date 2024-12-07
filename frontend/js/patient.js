@@ -357,7 +357,15 @@ function openPastAppointmentModal(appointmentId) {
             modalPastAppointmentsDiagnosis.innerText = info.diagnosis;
 
             if (info.pdf_file) {
-                modalPastAppointmentsPdfAttachment.innerHTML = `<a href="${info.pdf_file}" target="_blank">Ver PDF</a>`;
+                const link = document.createElement('a');
+                link.innerText = "Ver PDF";
+                link.href = `/frontend/html/pdfViewer.html/?link=${info.pdf_file}`; // URL del archivo en el servidor
+
+                modalPastAppointmentsPdfAttachment.innerText = "";
+
+                modalPastAppointmentsPdfAttachment.appendChild(link); // Agregarlo temporalmente al DOM
+
+                // modalPastAppointmentsPdfAttachment.innerHTML = `<a href="http://localhost/uploads/${info.pdf_file}" target="_blank">Ver PDF</a>`;
             } else {
                 modalPastAppointmentsPdfAttachment.innerText = 'No hay PDF adjunto';
             }
