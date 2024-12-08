@@ -70,6 +70,7 @@ const appointmentPatientName = document.querySelector('#patient-name');
 const appointmentDateTime = document.querySelector('#appointment-date-time');
 const appointmentSymptomatology = document.querySelector('#symptomatology');
 const appointmentDiagnosis = document.querySelector('#diagnosis');
+const appointmentPdf = document.querySelector('#upload-pdf');
 const selectMedication = document.querySelector('#medication-select');
 const medicationQuantity = document.querySelector('#medication-quantity');
 const medicationFrequency = document.querySelector('#medication-frequency');
@@ -78,13 +79,15 @@ const medicationCondition = document.querySelector('#chronic-condition');
 const addMedicationBtn = document.querySelector('#add-medication-btn');
 const medicationTable = document.querySelector('.main-appointment-form .medicines table tbody');
 const modalDoctorsSelect = document.querySelector('#doctor-select');
-const registerAppointmetnBtn = document.querySelector('#register-appointment-btn');
+// const registerAppointmetnBtn = document.querySelector('#register-appointment-btn');
+const mainAppointmentForm = document.querySelector('.main-appointment-form');
 const errorsSpanSymptomatology = document.querySelector('.errors #symptomatology-er');
 const errorsSpanDiagnosis = document.querySelector('.errors #diagnosis-er');
 
 const errorsSpan2 = document.querySelector('#errors2 span');
-const btnNewAppointment = document.querySelector('#create-Appointment');
+const btnReferAppointment = document.querySelector('#create-Appointment');
 const newAppointmentDateIn = document.querySelector('#new-appointment-date');
+const newAppointmentSymptomatology = document.querySelector('#appointment-symptomatology');
 
 const errorsMedicineName = document.querySelector('.errors #medicine-er');
 const errorsMedicineQuantity = document.querySelector('.errors #quantity-er');
@@ -505,8 +508,13 @@ function selectDoctors(id) {
         });
 }
 
-registerAppointmetnBtn.addEventListener('click', (e) => {
+mainAppointmentForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+
+    console.log(e);
+    
 
     let isAppointmentValid = true;
 
@@ -569,7 +577,7 @@ registerAppointmetnBtn.addEventListener('click', (e) => {
         })
         .then(data => {
             console.log(data);
-
+            
             closeModalBtn.click();
 
             setTimeout(() => {
@@ -585,13 +593,66 @@ registerAppointmetnBtn.addEventListener('click', (e) => {
 
                 modalDoctorsSelect.innerText = "";
 
-                selectAppointmentsToday(id);
+                selectAppointmentsToday(id).then(appointmentsToday => {
+                    doctorTodayAppointmentsTable.innerText = "";
+                    if (appointmentsToday.length > 0) {
+                        appointmentsToday.forEach(appointment => {
+                            const tableRow = document.createElement('tr');
+                            
+                            const tableCellAppointmentId = document.createElement('td');
+                            const tableCellPatient = document.createElement('td');
+                            const tableCellSymptomatology = document.createElement('td');
+                            const tableCellBtn = document.createElement('td');
+                    
+                            const btnStartAppointment = document.createElement('button');
+                            btnStartAppointment.innerText = '¡Iniciar consulta!';
+                            btnStartAppointment.addEventListener('click', () => {
+                                openAppointmentModal(appointment.id);
+                            })
+                    
+                            tableCellBtn.appendChild(btnStartAppointment);
+                    
+                            tableCellAppointmentId.innerText = appointment.id;
+                            tableCellPatient.innerText = appointment.patient_name;
+                            tableCellSymptomatology.innerText = appointment.symptomatology;
+                    
+                            tableRow.appendChild(tableCellAppointmentId);
+                            tableRow.appendChild(tableCellPatient);
+                            tableRow.appendChild(tableCellSymptomatology);
+                            tableRow.appendChild(tableCellBtn);
+                    
+                            doctorTodayAppointmentsTable.appendChild(tableRow);
+                        })
+                    } else {
+                        const tableRow = document.createElement('tr');
+                
+                        const tableLongCell = document.createElement('td');
+                
+                        tableLongCell.innerText = 'No se han encontrado citas para hoy';
+                
+                        tableLongCell.colSpan = 4;
+                
+                        tableRow.appendChild(tableLongCell);
+                
+                        tableRow.style.cursor = "default";
+                
+                        doctorTodayAppointmentsTable.appendChild(tableRow);
+                    }
+                });
+
+                selectAppointmentsNextSevenDays(id).then(appointments => {
+                    let counter = 0;
+                
+                    appointments.forEach(() => counter++);
+                
+                    doctorAppointmentsNextSevenDays.innerText = counter;
+                });
 
             }, 400);
 
             const medicationsRows = medicationTable.querySelectorAll('tr');
 
-            if (medicationsRows) {
+            if (medicationsRows[0].children[0].colSpan != 6) {
                 
                 medicationsRows.forEach(row => {
                     const newAppointmentMedication = {
@@ -627,6 +688,43 @@ registerAppointmetnBtn.addEventListener('click', (e) => {
 
                 
             }
+            
+        })
+        .then(() => {
+
+            if (appointmentPdf.files[0]) {
+
+                const pdfFile = new FormData();
+                pdfFile.append('file', appointmentPdf.files[0]);
+
+                fetch(`http://localhost/?resource_type=appointments&resource_id=${appointmentIdInput.innerText}&pdf=true`, {
+                    method: 'POST', // Método HTTP
+                    body: pdfFile
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la petición');
+                        }
+            
+                        console.log(response);
+
+                        console.log(response.json());
+                        
+                        
+                        return response.json();
+                    })
+                    .then(data => {
+
+                        console.log(data);
+                        debugger;
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        return false;
+                    });
+            }
+
             
         })
         .catch(error => {
@@ -713,10 +811,12 @@ newAppointmentDateIn.addEventListener('blur', () => {
 
 
 
-btnNewAppointment.addEventListener('click', (e) => {
+btnReferAppointment.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
+
+    let isAppointmentValid = false;
 
     const appointmentDateValue = new Date(newAppointmentDateIn.value);
 
@@ -740,6 +840,121 @@ btnNewAppointment.addEventListener('click', (e) => {
         errorsSpan2.innerText = "";
         newAppointmentDateIn.style.borderColor = "rgb(93, 226, 102)";
         newAppointmentDateIn.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+        isAppointmentValid = true;
     }
+
+    if (!isAppointmentValid) {
+        return;
+    }
+
+    const appointmentUpdate = {
+        id: appointmentIdInput.innerText,
+        patient_id: patientIdInput.innerText,
+        doctor_id: parseInt(modalDoctorsSelect.selectedOptions[0].value),
+        appointment_date: utils.getFormattedDate(new Date(newAppointmentDateIn.value)),
+        symptomatology: newAppointmentSymptomatology.value,
+        diagnosis: "",
+        is_consultation_done: 0,
+        pdf_file: "none"
+    }
+
+    console.log(appointmentUpdate);
+
+    fetch(`http://localhost/?resource_type=appointments&resource_id=${appointmentIdInput.innerText}`, {
+        method: 'PUT', // Método HTTP
+        headers: {
+            'Content-Type': 'application/json', // Especificar que el cuerpo está en formato JSON
+        },
+        body: JSON.stringify(appointmentUpdate)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la petición');
+            }
+
+            console.log(response);
+            
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            
+            closeModalBtn.click();
+
+            setTimeout(() => {
+
+                appointmentDoctorName.value = "";
+                appointmentPatientName.value = "";
+
+                appointmentDateTime.value = "";
+                appointmentSymptomatology.innerText = "";
+
+                appointmentIdInput.innerText = "";
+                patientIdInput.innerText = "";
+
+                modalDoctorsSelect.innerText = "";
+
+                selectAppointmentsToday(id).then(appointmentsToday => {
+                    doctorTodayAppointmentsTable.innerText = "";
+                    if (appointmentsToday.length > 0) {
+                        appointmentsToday.forEach(appointment => {
+                            const tableRow = document.createElement('tr');
+                            
+                            const tableCellAppointmentId = document.createElement('td');
+                            const tableCellPatient = document.createElement('td');
+                            const tableCellSymptomatology = document.createElement('td');
+                            const tableCellBtn = document.createElement('td');
+                    
+                            const btnStartAppointment = document.createElement('button');
+                            btnStartAppointment.innerText = '¡Iniciar consulta!';
+                            btnStartAppointment.addEventListener('click', () => {
+                                openAppointmentModal(appointment.id);
+                            })
+                    
+                            tableCellBtn.appendChild(btnStartAppointment);
+                    
+                            tableCellAppointmentId.innerText = appointment.id;
+                            tableCellPatient.innerText = appointment.patient_name;
+                            tableCellSymptomatology.innerText = appointment.symptomatology;
+                    
+                            tableRow.appendChild(tableCellAppointmentId);
+                            tableRow.appendChild(tableCellPatient);
+                            tableRow.appendChild(tableCellSymptomatology);
+                            tableRow.appendChild(tableCellBtn);
+                    
+                            doctorTodayAppointmentsTable.appendChild(tableRow);
+                        })
+                    } else {
+                        const tableRow = document.createElement('tr');
+                
+                        const tableLongCell = document.createElement('td');
+                
+                        tableLongCell.innerText = 'No se han encontrado citas para hoy';
+                
+                        tableLongCell.colSpan = 4;
+                
+                        tableRow.appendChild(tableLongCell);
+                
+                        tableRow.style.cursor = "default";
+                
+                        doctorTodayAppointmentsTable.appendChild(tableRow);
+                    }
+                });
+                
+                selectAppointmentsNextSevenDays(id).then(appointments => {
+                    let counter = 0;
+                
+                    appointments.forEach(() => counter++);
+                
+                    doctorAppointmentsNextSevenDays.innerText = counter;
+                });
+
+            }, 400);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            return false;
+        });
+
     
 })

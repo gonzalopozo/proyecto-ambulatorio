@@ -156,7 +156,6 @@ modalAppointmentDate.addEventListener('blur', () => {
     
 });
 
-
 const queryParams = new URLSearchParams(location.search);
 const id = parseInt(queryParams.get('resource_id'));
 
@@ -208,7 +207,7 @@ function selectCurrentMedication(id) {
         });
 }
 
-selectCurrentMedication(id).then (currentMedication => {
+selectCurrentMedication(id).then(currentMedication => {
     if (currentMedication.length > 0) {
         currentMedication.forEach(medication => {
             const tableRow = document.createElement('tr');
@@ -223,12 +222,30 @@ selectCurrentMedication(id).then (currentMedication => {
             tableCellChronic.innerText = medication.chronic > 0 ? 'Si' : 'No';
             if (tableCellChronic.innerText == 'No') {
                 let appointmentDate = new Date(medication.appointment_date);
+                // console.log("FECHITA  " + appointmentDate);
+                // console.log("COMPARACIÓN FECHITA  " + (appointmentDate < Date.now()));
+                
+
+                // if (appointmentDate < Date.now()) {
+                //     return;
+                // } 
     
-                console.log(appointmentDate.getDate());
-                console.log(medication.duration_days);
+                // console.log(appointmentDate.getDate());
+                // console.log(medication.duration_days);
+                console.log("FECHITA  ANTES " + appointmentDate);
                 
     
                 appointmentDate.setDate(appointmentDate.getDate() + parseInt(medication.duration_days));
+                console.log("+DÍAS -> " + parseInt(medication.duration_days));
+                
+
+                console.log("FECHITA  DEPUES " + appointmentDate);
+                console.log("COMPARACIÓN FECHITA  " + (appointmentDate < Date.now()));
+                
+
+                if (appointmentDate < Date.now()) {
+                    return;
+                } 
     
                 console.log(appointmentDate);
     
@@ -346,6 +363,11 @@ function openPastAppointmentModal(appointmentId) {
         .then(pastAppointmentInfo => {
             let info = pastAppointmentInfo[0];
 
+            console.log(appointmentId);
+            
+            console.log(info);
+            
+
             // Rellenar el modal con la información de la cita pasada
             modalPastAppointmentsTitle.innerText = `Consulta con el ID ${appointmentId}:`;
             modalPastAppointmentsDoctorName.innerText = info.doctor_name;
@@ -356,10 +378,32 @@ function openPastAppointmentModal(appointmentId) {
             modalPastAppointmentsSymptomatology.innerText = info.symptomatology;
             modalPastAppointmentsDiagnosis.innerText = info.diagnosis;
 
-            if (info.pdf_file) {
+            if (info.pdf_file && (info.pdf_file != "none")) {
                 const link = document.createElement('a');
-                link.innerText = "Ver PDF";
-                link.href = `/frontend/html/pdfViewer.html/?link=${info.pdf_file}`; // URL del archivo en el servidor
+
+                fetch(`http://localhost/uploads/${info.pdf_file}`)  // La ruta del archivo PDF en el servidor
+                    .then(response => {
+                        // Verificamos si la respuesta es exitosa
+                        if (!response.ok) {
+                            throw new Error('No se pudo descargar el archivo');
+                        }
+                        return response.blob();  // Convertimos la respuesta en un blob (objeto binario)
+                    })
+                    .then(blob => {
+                        // Creamos un enlace temporal para la descarga
+                        link.innerText = "Descargar PDF";
+                        link.href = URL.createObjectURL(blob);  // Creamos un URL de objeto del blob
+                        link.download = info.pdf_file;  // Nombre del archivo a descargar
+                        // link.click();  // Simulamos un clic para iniciar la descarga
+                    })
+                    .catch(error => {
+                        console.error('Error descargando el archivo:', error);  // Manejamos errores
+                    });
+
+                // link.innerText = "Descargar PDF";
+                // link.href = '#';
+                // link.download = `htstp://localhost/uploads/${info.pdf_file}`; // URL del archivo en el servidor
+                // link.download = `${info.pdf_file}`;
 
                 modalPastAppointmentsPdfAttachment.innerText = "";
 

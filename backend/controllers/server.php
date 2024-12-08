@@ -42,7 +42,7 @@ $resourceId = array_key_exists('resource_id', $_GET) ? $_GET['resource_id'] : ''
 $userEmail = array_key_exists('user_email', $_GET) ? $_GET['user_email'] : '';
 $userPassword = array_key_exists('user_password', $_GET) ? $_GET['user_password'] : '';
 $appointmentsStatus = array_key_exists('appointments_status', $_GET) ? $_GET['appointments_status'] : '';
-
+$pdf = array_key_exists('pdf', $_GET) ? true : false;
 
 // Generamos la respuesta asumiendo que el pedido es correcto
 switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
@@ -130,7 +130,7 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
                                 medicines m ON am.medicine_id = m.id
                             WHERE 
                                 a.is_consultation_done = 1
-                                AND a.id = 1;";
+                                AND a.id = $resourceId;";
 
             $resource = $dbConn->db_query($select_query);
 
@@ -206,45 +206,77 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
     case 'POST':
         // En un caso real, aquí se guardaria un nuevo libro en una BBDD 
 
-        // Tomamos la entrada "cruda"
-        $json = file_get_contents('php://input');
 
-        $insertInfo = json_decode($json, true);
+        if ($resourceType == "appointments" && !empty($resourceId) && $pdf) {
+            // error_log(print_r($_FILES, true));
+            $fileTmpPath = $_FILES['file']['tmp_name'];
+            $fileName = $_FILES['file']['name'];
+            $fileSize = $_FILES['file']['size'];
+            $fileType = $_FILES['file']['type'];
 
-        $insert_query = "INSERT INTO $resourceType (";
+            // Genera un nombre único para evitar colisiones
+            $uniqueFileName = uniqid() . '-' . $fileName;
+            error_log($uniqueFileName);
 
-        $insertInfoKeys = array_keys($insertInfo);
+            // Ruta completa al archivo
+            $destPath = "./uploads/" . $uniqueFileName;
 
-        for ($i = 0; $i < count($insertInfoKeys); $i++) { 
-            if ((count($insertInfoKeys) - 1) == $i) {
-                $insert_query .= "$insertInfoKeys[$i]) ";
-            } else {
-                $insert_query .= "$insertInfoKeys[$i],";
+            // Mueve el archivo a la ubicación deseada
+            if (move_uploaded_file($fileTmpPath, $destPath)) {
+                // UPDATE `appointments` SET `pdf_file` = 'A' WHERE `appointments`.`id` = 7;
+
+                $update_query = "UPDATE $resourceType SET pdf_file = '$uniqueFileName' WHERE id = $resourceId";
+
+                $updateResource = $dbConn->db_query($update_query);
+
+                if (is_array($updateResource)) {
+                    echo json_encode(["ID del $resourceType modificado" => $resourceId], true);
+                }
+
             }
-        }
-
-        $insert_query .= "VALUES (";
-
-        $insertInfoValues = array_values($insertInfo);
-
-        for ($i = 0; $i < count($insertInfoValues); $i++) { 
-            if ((count($insertInfoValues) - 1) == $i) {
-                $insert_query .= "'$insertInfoValues[$i]');";
-            } else {
-                $insert_query .= "'$insertInfoValues[$i]',";
-            }
-        }
-
-        $insertResource = $dbConn->db_query($insert_query);
-        if (is_array($insertResource)) {
-            $select_inserted_resource = "SELECT id FROM $resourceType ORDER BY id DESC LIMIT 1";
-
-            $resource = $dbConn->db_query($select_inserted_resource);
-
-            echo json_encode(["ID del $resourceType added" => $resource[0]], true);
         } else {
-            echo json_encode(['error' => "este $resourceType no se ha podido meter"]);
+            // Tomamos la entrada "cruda"
+            $json = file_get_contents('php://input');
+
+            $insertInfo = json_decode($json, true);
+
+            $insert_query = "INSERT INTO $resourceType (";
+
+            $insertInfoKeys = array_keys($insertInfo);
+
+            for ($i = 0; $i < count($insertInfoKeys); $i++) { 
+                if ((count($insertInfoKeys) - 1) == $i) {
+                    $insert_query .= "$insertInfoKeys[$i]) ";
+                } else {
+                    $insert_query .= "$insertInfoKeys[$i],";
+                }
+            }
+
+            $insert_query .= "VALUES (";
+
+            $insertInfoValues = array_values($insertInfo);
+
+            for ($i = 0; $i < count($insertInfoValues); $i++) { 
+                if ((count($insertInfoValues) - 1) == $i) {
+                    $insert_query .= "'$insertInfoValues[$i]');";
+                } else {
+                    $insert_query .= "'$insertInfoValues[$i]',";
+                }
+            }
+
+            $insertResource = $dbConn->db_query($insert_query);
+            if (is_array($insertResource)) {
+                $select_inserted_resource = "SELECT id FROM $resourceType ORDER BY id DESC LIMIT 1";
+
+                $resource = $dbConn->db_query($select_inserted_resource);
+
+                echo json_encode(["ID del $resourceType added" => $resource[0]], true);
+            } else {
+                echo json_encode(['error' => "este $resourceType no se ha podido meter"]);
+            }
         }
+
+        
 
         break;
     
