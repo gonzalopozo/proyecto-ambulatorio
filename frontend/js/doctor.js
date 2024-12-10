@@ -177,8 +177,6 @@ function fillInputs(appointmentId) {
             return response.json();
         })
         .then(data => {
-            console.log(data[0]);
-            
             return data[0];
         })
         .then(appointmentInfo => {
@@ -567,9 +565,6 @@ mainAppointmentForm.addEventListener('submit', (e) => {
                         chronic: row.cells[5] == 365 ? 1 : 0
                     }
 
-                    console.log(newAppointmentMedication);
-                    
-
                     fetch(`http://localhost/?resource_type=appointment_medicines`, {
                         method: 'POST', // Método HTTP
                         headers: {
@@ -702,16 +697,9 @@ btnReferAppointment.addEventListener('click', (e) => {
             return response.json();
         })
         .then(() => {
-            console.log("limpieza a la espera 1");
-
             closeModalBtn.click();
 
-            console.log("limpieza a la espera 2");
-
             clearAppointmentModal();
-
-            console.log("limpieza hecha");
-            
         })
         .catch(error => {
             console.error('Error:', error);

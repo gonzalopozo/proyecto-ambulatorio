@@ -21,30 +21,24 @@ $allowedResourceTypes = [
 $resourceType = $_GET['resource_type'];
 
 if (!in_array($resourceType, $allowedResourceTypes)) {
+    header("Location: http://localhost:5500/frontend/");
     die;
 }
 
-// Permitir solicitudes CORS
-// Permitir solicitudes desde cualquier origen
 header('Access-Control-Allow-Origin: *');
 
-// Permitir los métodos HTTP especificados
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 
-// Permitir encabezados específicos
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
-// Establecer el tipo de contenido como JSON
 header('Content-Type: application/json');
 
-// Levantamos el id del recurso buscado
 $resourceId = array_key_exists('resource_id', $_GET) ? $_GET['resource_id'] : '';
 $userEmail = array_key_exists('user_email', $_GET) ? $_GET['user_email'] : '';
 $userPassword = array_key_exists('user_password', $_GET) ? $_GET['user_password'] : '';
 $appointmentsStatus = array_key_exists('appointments_status', $_GET) ? $_GET['appointments_status'] : '';
 $pdf = array_key_exists('pdf', $_GET) ? true : false;
 
-// Generamos la respuesta asumiendo que el pedido es correcto
 switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
     case 'GET':
         if (!empty($userEmail) && !empty($userPassword)) {
@@ -91,8 +85,6 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
             WHERE 
                 a.patient_id = $resourceId;";
 
-            // print_r($resourceId);
-
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
@@ -138,17 +130,6 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
 
         } else if ($resourceType == "doctor_patients" && !empty($resourceId)) {
             $select_query = "SELECT doctor_id, (SELECT name FROM doctors WHERE id = doctor_patients.doctor_id) as name, (SELECT specialty FROM doctors WHERE id = doctor_patients.doctor_id) as specialty FROM $resourceType WHERE patient_id = $resourceId";
-
-            // $select_query = "SELECT 
-            //                     dp.doctor_id, 
-            //                     d.name, 
-            //                     d.specialty
-            //                 FROM 
-            //                     $resourceType dp
-            //                 JOIN 
-            //                     doctors d ON dp.doctor_id = d.id
-            //                 WHERE 
-            //                     dp.patient_id = 1;";
 
             $resource = $dbConn->db_query($select_query);
 
@@ -204,9 +185,6 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
         break;
 
     case 'POST':
-        // En un caso real, aquí se guardaria un nuevo libro en una BBDD 
-
-
         if ($resourceType == "appointments" && !empty($resourceId) && $pdf) {
             // error_log(print_r($_FILES, true));
             $fileTmpPath = $_FILES['file']['tmp_name'];
@@ -223,8 +201,6 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
 
             // Mueve el archivo a la ubicación deseada
             if (move_uploaded_file($fileTmpPath, $destPath)) {
-                // UPDATE `appointments` SET `pdf_file` = 'A' WHERE `appointments`.`id` = 7;
-
                 $update_query = "UPDATE $resourceType SET pdf_file = '$uniqueFileName' WHERE id = $resourceId";
 
                 $updateResource = $dbConn->db_query($update_query);
@@ -275,8 +251,6 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
                 echo json_encode(['error' => "este $resourceType no se ha podido meter"]);
             }
         }
-
-        
 
         break;
     
@@ -339,6 +313,7 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
         break;
     
     default:
-        # code...
+        echo json_encode(["error" => "ERROR"]);
+
         break;
 }
