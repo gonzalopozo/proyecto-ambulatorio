@@ -1,3 +1,5 @@
+import utils from './helpers/utils.mjs';
+
 const formLogin = document.querySelector('#login-form');
 const formLoginEmail = document.querySelector('#email');
 const formLoginPassword = document.querySelector('#password');
@@ -17,25 +19,21 @@ function changeInput(input) {
 
     if (inputType == "email") {
         if (inputValue.match(/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i)) {
-            input.style.borderColor = "rgb(93, 226, 102)";
-            input.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+            utils.successInput(input);
             isEmailValid = true;
             errorsSpanEmail.innerText = "";
         } else {
-            input.style.borderColor = "rgb(226, 93, 93)";
-            input.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+            utils.failInput(input);
             isEmailValid = false;
             errorsSpanEmail.innerText = "Email introducido incorretamente";
         }
     } else if (inputType == "password") {
         if (inputValue.match(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)) {
-            input.style.borderColor = "rgb(93, 226, 102)";
-            input.style.boxShadow = "0 0 8px rgba(93, 226, 102, 0.5)";
+            utils.successInput(input);
             isPasswordValid = true;
             errorsSpanPassword.innerText = "";
         } else {
-            input.style.borderColor = "rgb(226, 93, 93)";
-            input.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
+            utils.failInput(input);
             isPasswordValid = false;
             errorsSpanPassword.innerText = "Contraseña no valida";
         }
@@ -47,17 +45,11 @@ function resetInputs() {
     formLoginEmail.value = '';
     formLoginPassword.value = '';
 
-    formLoginEmail.style.borderColor = "rgb(226, 93, 93)";
-    formLoginEmail.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
-
-    formLoginPassword.style.borderColor = "rgb(226, 93, 93)";
-    formLoginPassword.style.boxShadow = "0 0 8px rgba(223, 93, 93, 0.5)";
-
+    utils.failInput(formLoginEmail);
+    utils.failInput(formLoginPassword);
 }
 
 formLoginEmail.addEventListener('blur', (e) => {
-    console.log(e);
-    
     changeInput(formLoginEmail);
 });
 
@@ -69,21 +61,15 @@ formLoginPassword.addEventListener('blur', () => {
 formLogin.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Realizamos la petición GET
     fetch(`http://localhost/?resource_type=patients&user_email=${formLoginEmail.value}&user_password=${formLoginPassword.value}`)
         .then(response => {
-            console.log(response);
-            console.log(JSON.stringify(response));
-            
-            // Verificamos si la respuesta es exitosa (status 200-299)
             if (!response.ok) {
             throw new Error('Error en la petición');
             }
-            return response.json(); // Parseamos la respuesta como JSON
+
+            return response.json();
         })
         .then(data => {
-            console.log('Respuesta de la API:', data);
-
             changeInput(formLoginEmail);
             changeInput(formLoginPassword);
             
@@ -96,9 +82,8 @@ formLogin.addEventListener('submit', (e) => {
                         location.assign(`../frontend/html/doctor.html?resource_id=${data.id}`);
                     }
                 } else {
-                    console.log("hola");
                     resetInputs();
-                    errorsSpanPassword.innerText = "Usuario no encontrado";
+                    errorsSpanNotFound.innerText = "Usuario no encontrado";
                 }
             } else {
                 resetInputs();

@@ -313,6 +313,10 @@ section:hover {
     animation: fadeIn 0.4s ease-in-out;
 }
 
+#modal-past-appointments .modal-content {
+    max-width: 600px;
+}
+
 #doctor-modal .modal-content {
     background-color: #ffffff;
     padding: 2rem;
@@ -402,6 +406,11 @@ section:hover {
 
 .modal-content span {
     font-weight: bold;
+}
+
+.modal-medication {
+    list-style: none;
+    padding-left: 12px;
 }
 
 /* Botón de envío dentro del modal */

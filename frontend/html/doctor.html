@@ -72,13 +72,12 @@
                         <input type="datetime" name="appointment-date-time" id="appointment-date-time" readonly>
 
                         <label for="symptomatology">Sintomatología:</label>
-                        <textarea name="symptomatology" id="symptomatology"></textarea>
+                        <textarea name="symptomatology" id="symptomatology" readonly></textarea>
 
                         <label for="diagnosis">Diagnóstico:</label>
                         <textarea name="diagnosis" id="diagnosis"></textarea>
 
                         <div class="errors">
-                            <span id="symptomatology-er"></span>
                             <span id="diagnosis-er"></span>
                         </div>
     
@@ -141,23 +140,21 @@
 
                     <div class="new-Appt">
                         <h3>Derivar Cita</h3>
-                        <!-- <form> -->
-                            <label for="doctor-select">Selecciona un doctor:</label>
-                            <select id="doctor-select" name="doctor">
-                            </select>
 
-                            <label for="appointment-date">Selecciona una fecha y hora:</label>
-                            <input type="datetime-local" id="new-appointment-date" name="date">
+                        <label for="doctor-select">Selecciona un doctor:</label>
+                        <select id="doctor-select" name="doctor"></select>
 
-                            <label for="appointment-symptomatology">Sintomatología:</label>
-                            <textarea id="appointment-symptomatology" name="symptomatology"></textarea>
+                        <label for="appointment-date">Selecciona una fecha y hora:</label>
+                        <input type="datetime-local" id="new-appointment-date" name="date">
 
-                            <div class="errors" id="errors2">
-                                <span></span>
-                            </div>
-                            
-                            <button class="intra-btn"  id="create-Appointment" type="button">Agendar</button>
-                        <!-- </form> -->
+                        <label for="appointment-symptomatology">Sintomatología:</label>
+                        <textarea id="appointment-symptomatology" name="symptomatology"></textarea>
+
+                        <div class="errors">
+                            <span id="new-appointment-er"></span>
+                        </div>
+                        
+                        <button class="intra-btn"  id="create-Appointment" type="button">Agendar</button>
 
                     </div>
 
