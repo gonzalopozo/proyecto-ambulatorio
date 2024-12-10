@@ -1,40 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es"> 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Iniciar sesión</title> <!-- Título de la página que se muestra en la pestaña del navegador -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/normalize.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/normalize.css"> <!-- Normalize ayuda a estandarizar el estilo en diferentes navegadores -->
+    <link rel="stylesheet" href="./css/style.css"> <!-- Estilos personalizados para la página -->
+    <link rel="shortcut icon" href="./assets/favicon/favicon.png"> <!-- Icono de la página -->
 </head>
 <body>
-    <main id="login-main">
-        <form id="login-form">
-            <div class="login-form-email">
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email">
+    <main id="login-main"> <!-- Contenedor principal de la página de inicio de sesión -->
+        <form id="login-form"> <!-- Formulario para el inicio de sesión -->
+            
+            <div class="login-form-email"> <!-- Contenedor para el campo de correo electrónico -->
+                <label for="email">Email:</label> <!-- Etiqueta para el campo de email -->
+                <input type="email" name="email" id="email" placeholder="email@example.com"> <!-- Campo de entrada para el correo -->
             </div>
 
-            <div class="login-form-password">
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password">
+            <div class="login-form-password"> <!-- Contenedor para el campo de contraseña -->
+                <label for="password">Password:</label> <!-- Etiqueta para el campo de contraseña -->
+                <input type="password" name="password" id="password" placeholder="Password1234@"> <!-- Campo de entrada para la contraseña -->
             </div>
 
-            <div class="errors">
-                <span id="email"></span>
-                <span id="password"></span>
-                <span id="not-found"></span>
+            <div class="errors"> <!-- Contenedor para los mensajes de error -->
+                <span id="email"></span> <!-- Mensaje de error para el email -->
+                <span id="password"></span> <!-- Mensaje de error para la contraseña -->
+                <span id="not-found"></span> <!-- Mensaje de error para el caso en que no se encuentre el usuario -->
             </div>
 
-            <div class="login-form-submit">
-                <input type="submit" value="¡Iniciar sesión!">
+            <div class="login-form-submit"> <!-- Contenedor para el botón de envío del formulario -->
+                <input type="submit" value="¡Iniciar sesión!"> <!-- Botón para enviar el formulario -->
             </div>
         </form>
     </main>
-    <script type="module" src="./js/helpers/utils.mjs"></script>
-    <script type="module" src="./js/index.js"></script>
+    
+    <!-- Enlaces a los archivos JavaScript -->
+    <script type="module" src="./js/helpers/utils.mjs"></script> <!-- Archivo JavaScript con funciones de utilidad -->
+    <script type="module" src="./js/index.js"></script> <!-- Archivo JavaScript principal -->
 </body>
 </html>

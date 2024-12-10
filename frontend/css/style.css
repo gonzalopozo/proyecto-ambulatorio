@@ -1,247 +1,264 @@
 /* General */
+:root {
+    /* Colores */
+    --modal-overlay-bg: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente para superponer en modales */
+    --primary-color: #3498DB; /* Azul principal */
+    --hover-color: #2980B9; /* Azul más oscuro para hover */
+    --initial-gradient-color: #EAF6FF; /* Azul muy claro para gradientes */
+    --final-gradient-color: #D6EAF8; /* Azul ligeramente más intenso para gradientes */
+    --light-blue: #85C1E9; /* Azul claro */
+    --regular-box-shadow-color: rgba(0, 0, 0, 0.2); /* Sombra común para elementos */
+    --light-box-shadow-color: rgba(0, 0, 0, 0.1); /* Sombra más ligera */
+    --secondary-text-color: #2C3E50; /* Azul oscuro para texto secundario */
+    --sparking-blue: #5DADE2; /* Azul brillante */
+    --gray-border-color: #D6DBDF; /* Gris para bordes */
+    --dark-blue: #2E86C1; /* Azul más oscuro */
+    --blue-border-lighter: #AED6F1; /* Azul más claro para bordes */
+    --light-gray: #5D6D7E; /* Gris claro */
+    --table-background-color: #F8F9F9; /* Fondo gris muy claro para tablas */
+    --close-button-color: #333333; /* Color oscuro para botones de cerrar */
+    --close-button-hover-color: #FF5252; /* Color rojo para hover en botones de cerrar */
+
+    /* Propiedades comunes */
+    --table-border-bottom: 1px solid #E5E8E8; /* Borde inferior de tabla */
+    --border-radius: 8px; /* Radio de borde común */
+}
+
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
+    box-sizing: border-box; /* Asegura que el padding y el borde no sumen al tamaño total de los elementos */
+    margin: 0; /* Elimina el margen predeterminado */
+    padding: 0; /* Elimina el padding predeterminado */
+    font-family: "Roboto", sans-serif; /* Fuente principal */
+    font-style: normal; /* Estilo normal de la fuente */
 }
 
 @font-face {
-    font-family: 'DigitalClock';
-    src: url('http://localhost/font/DS-DIGII.TTF') format('woff2');
+    font-family: 'DigitalClock'; /* Fuente para el reloj digital */
+    src: url('http://localhost/font/DS-DIGII.TTF') format('woff2'); /* Fuente personalizada */
     font-weight: normal;
     font-style: normal;
 }
 
 body {
-    background: linear-gradient(135deg, #EAF6FF, #D6EAF8); /* Azul pastel */
+    background: linear-gradient(135deg, var(--initial-gradient-color), var(--final-gradient-color)); /* Gradiente de fondo en tonos azules pastel */
 }
 
 /* Formulario */
 
 #login-main {
-    height: 100dvh;
+    height: 100dvh; /* Altura completa de la vista de la ventana */
 }
 
 #login-form {
-    padding: 2rem;
-    border: 1px solid transparent;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 360px;
-    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #85C1E9, #D4E6F1) border-box; /* Borde de gradiente */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 2rem; /* Espaciado interior */
+    border: 1px solid transparent; /* Borde transparente para los márgenes */
+    border-radius: 12px; /* Bordes redondeados */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 360px; /* Ancho máximo */
+    background: linear-gradient(white, white) padding-box, linear-gradient(135deg, var(--light-blue), #D4E6F1) border-box; /* Fondo blanco con borde de gradiente */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra alrededor del formulario */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animación de transformación y sombra */
 }
 
 /* Hover del formulario */
 #login-form:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px); /* Levanta ligeramente el formulario */
+    box-shadow: 0 8px 16px var(--regular-box-shadow-color); /* Sombra más intensa al pasar el ratón */
 }
 
 /* Div del formulario */
 #login-form div:not(.login-form-submit) {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem; /* Espaciado entre los campos */
 }
 
 /* Etiquetas */
 #login-form div label {
-    color: #2C3E50; /* Azul oscuro */
-    font-weight: bold;
-    font-size: 1rem;
+    color: var(--secondary-text-color); /* Color del texto de las etiquetas */
+    font-weight: bold; /* Negrita en las etiquetas */
+    font-size: 1rem; /* Tamaño de la fuente */
 }
 
 /* Campos de entrada */
 #login-form div input[type="email"], 
 #login-form div input[type="password"] {
-    width: 100%;
-    border: 1px solid #aaa;
-    border-radius: 8px;
-    padding: 0.75rem;
-    margin-top: 0.5rem;
-    background-color: #F7FBFE; /* Azul muy claro */
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    width: 100%; /* Campos de entrada a 100% de ancho */
+    border: 1px solid #aaa; /* Borde gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    padding: 0.75rem; /* Espaciado interno */
+    margin-top: 0.5rem; /* Margen superior */
+    background-color: #F7FBFE; /* Fondo azul muy claro */
+    font-size: 1rem; /* Tamaño de la fuente */
+    transition: all 0.3s ease; /* Transición suave */
 }
 
 /* Hover y focus en los campos */
 #login-form div input[type="email"]:focus, 
 #login-form div input[type="password"]:focus {
-    border-color: rgb(93, 173, 226); /* Azul intenso */
-    outline: none;
-    background-color: #EBF6FF;
-    box-shadow: 0 0 8px rgba(93, 173, 226, 0.5);
+    border-color: rgb(93, 173, 226); /* Borde azul intenso al enfocar */
+    outline: none; /* Elimina el borde de enfoque predeterminado */
+    background-color: #EBF6FF; /* Fondo azul muy claro al enfocar */
+    box-shadow: 0 0 8px rgba(93, 173, 226, 0.5); /* Sombra de enfoque */
 }
 
 /* Botón de enviar */
 #login-form div input[type="submit"] {
-    width: 100%;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #5DADE2, #85C1E9); /* Degradado azul */
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Botón a 100% de ancho */
+    padding: 0.75rem; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 8px; /* Bordes redondeados */
+    background: linear-gradient(135deg, var(--sparking-blue), var(--light-blue)); /* Degradado azul */
+    color: white; /* Texto blanco */
+    font-size: 1.2rem; /* Tamaño de la fuente */
+    font-weight: bold; /* Negrita */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transición suave para el color de fondo y la transformación */
+    box-shadow: 0 4px 8px var(--light-box-shadow-color); /* Sombra del botón */
 }
 
 /* Hover del botón */
 #login-form div input[type="submit"]:hover {
-    background: linear-gradient(135deg, #3498DB, #5DADE2); /* Azul más intenso */
-    transform: translateY(-.5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, var(--primary-color), var(--sparking-blue)); /* Degradado más intenso al hacer hover */
+    transform: translateY(-.5px); /* Levanta ligeramente el botón */
+    box-shadow: 0 6px 12px var(--regular-box-shadow-color); /* Sombra más intensa al hacer hover */
 }
-
-/* Responsividad
-@media (max-width: 480px) {
-    #login-form {
-        padding: 1.5rem;
-    }
-
-    #login-form div input[type="email"], 
-    #login-form div input[type="password"], 
-    #login-form div input[type="submit"] {
-        font-size: 0.9rem;
-        padding: 0.6rem;
-    }
-} */
-
 
 /* Estilos página pacientes */
 /* General */
 main {
     display: grid;
-    place-items: center;
-    height: 90dvh;
+    place-items: center; /* Centra el contenido en la página */
+    height: 90dvh; /* Altura de la ventana del navegador */
 }
 
 header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 10dvh;
-    padding: 1rem 6% 1rem 2%;
-    background-color: #3498DB; /* Azul intenso */
-    color: #FFFFFF; /* Texto blanco */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    justify-content: space-between; /* Espacio entre los elementos */
+    align-items: center; /* Centra los elementos verticalmente */
+    height: 10dvh; /* Altura de la cabecera */
+    padding: 1rem 6% 1rem 2%; /* Espaciado en la cabecera */
+    background-color: var(--primary-color); /* Fondo azul intenso */
+    color: white; /* Texto blanco */
+    box-shadow: 0 4px 6px var(--light-box-shadow-color); /* Sombra de la cabecera */
 }
 
 header h1 {
-    font-size: 2rem;
-    margin: 0;
+    font-size: 2rem; /* Tamaño de la fuente del título */
+    margin: 0; /* Elimina el margen */
 }
 
 header h3 {
-    font-size: 1.3rem;
-    font-weight: 500;
-    text-align: right;
+    font-size: 1.3rem; /* Tamaño de la fuente del subtítulo */
+    font-weight: 500; /* Peso de la fuente */
+    text-align: right; /* Alinea el texto a la derecha */
 }
 
 .clock {
-    font-family: 'DigitalClock', sans-serif;
-    color: white;
-    font-size: 4rem;
+    font-family: 'DigitalClock', sans-serif; /* Fuente digital para el reloj */
+    color: white; /* Texto blanco */
+    font-size: 4rem; /* Tamaño grande para el reloj */
 }
 
-
+/* Contenedor de pacientes */
 .patient-container {
     display: grid;
     grid-template-areas:
         "user-info user-current-medication user-current-medication"
         "user-upcoming-appointments user-upcoming-appointments user-past-appointments"
-        "user-make-appointment-btn user-make-appointment-btn user-make-appointment-btn";
-    grid-gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
+        "user-make-appointment-btn user-make-appointment-btn user-make-appointment-btn"; /* Diseño de cuadrícula para la página */
+    grid-gap: 2rem; /* Espacio entre elementos */
+    padding: 2rem; /* Espaciado interno */
+    max-width: 1200px; /* Ancho máximo */
 }
 
-/* Section Styling */
+/* Estilo de secciones */
 section {
-    background-color: #FFFFFF;
-    border: 1px solid #D6DBDF;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    width: 100%;
-    /* max-width: 500px; */
+    background-color: white; /* Fondo blanco para las secciones */
+    border: 1px solid var(--gray-border-color); /* Borde gris claro */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px var(--light-box-shadow-color); /* Sombra de la sección */
+    padding: 1.5rem; /* Espaciado interno */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transición para hover */
+    width: 100%; /* Ancho completo */
 }
 
 section:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px); /* Levanta la sección al pasar el ratón */
+    box-shadow: 0 8px 16px var(--regular-box-shadow-color); /* Sombra más intensa al pasar el ratón */
 }
 
 .patient-container h5 {
-    font-size: 1.5rem;
-    color: #2E86C1; /* Azul medio */
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #AED6F1;
-    padding-bottom: 0.5rem;
+    font-size: 1.5rem; /* Tamaño de la fuente del encabezado */
+    color: var(--dark-blue); /* Color azul para el texto */
+    margin-bottom: 1rem; /* Margen inferior */
+    border-bottom: 2px solid var(--blue-border-lighter); /* Borde inferior azul claro */
+    padding-bottom: 0.5rem; /* Espaciado interior inferior */
 }
 
 .patient-container ul {
-    list-style: none;
-    padding: 0;
+    list-style: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el padding */
 }
 
+/* Estilos generales para los elementos de la página de pacientes */
 .patient-container ul li {
-    margin-bottom: 0.8rem;
-    font-size: 1rem;
-    color: #5D6D7E; /* Gris oscuro */
+    margin-bottom: 0.8rem; /* Espaciado entre elementos de la lista */
+    font-size: 1rem; /* Tamaño de fuente para los ítems de la lista */
+    color: var(--light-gray); /* Gris oscuro para el texto */
 }
 
+/* Estilos para la tabla dentro del contenedor de pacientes */
 .patient-container table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 12px;
-    overflow: hidden;
+    width: 100%; /* La tabla ocupa todo el ancho disponible */
+    border-collapse: collapse; /* Fusiona las celdas adyacentes sin espacio entre ellas */
+    border-radius: 12px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga del borde redondeado */
 }
 
+/* Elemento con id 'hide' es ocultado (no se muestra) */
 #hide {
     display: none;
 }
 
+/* Estilo de las celdas de la tabla */
 .patient-container table th,
 .patient-container table td {
-    padding: 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #E5E8E8;
-    text-align: center;
+    padding: 0.8rem; /* Espaciado dentro de las celdas */
+    text-align: left; /* Alineación de texto a la izquierda */
+    border-bottom: var(--table-border-bottom); /* Línea de separación inferior */
+    text-align: center; /* Alineación de texto centrada */
 }
 
+/* Estilos para los encabezados de la tabla */
 .patient-container table th {
-    background-color: #3498DB;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-align: center;
+    background-color: var(--primary-color); /* Fondo azul para las cabeceras */
+    color: white; /* Texto blanco */
+    font-weight: bold; /* Negrita en las cabeceras */
+    text-align: center; /* Alineación centrada */
 }
 
+/* Estilo para las filas de la tabla con índice par (números de fila pares) */
 .patient-container table tbody tr:nth-child(even) {
-    background-color: #F8F9F9;
+    background-color: var(--table-background-color); /* Fondo gris claro para filas pares */
 }
 
+/* Efecto hover en las filas de la tabla */
 .patient-container table tbody tr:hover {
-    background-color: #D6EAF8;
-    /* cursor: pointer; */
+    background-color: var(--final-gradient-color); /* Fondo degradado cuando se pasa el ratón */
+    /* cursor: pointer; /* Se comenta, se puede activar si se desea cambiar el cursor a "puntero" al pasar el ratón */
 }
 
+/* Estilo para evitar que los clics sobre ciertas celdas de la tabla tengan efecto */
 .patient-container table tbody tr:hover *:not(.user-past-appointments table tbody tr:hover *) {
-    cursor: default;
+    cursor: default; /* Cursor por defecto en ciertos elementos */
 }
 
-/* Grid Areas */
+/* Definición de las áreas de la cuadrícula (grid) */
 .patient-container .user-info {
-    grid-area: user-info;
+    grid-area: user-info; /* Asigna esta área en la cuadrícula */
 }
 
 .patient-container .user-info ul li span {
-    font-weight: bold
+    font-weight: bold; /* Resalta el texto con negrita */
 }
 
 .patient-container .user-current-medication {
@@ -260,597 +277,580 @@ section:hover {
     grid-area: user-make-appointment-btn;
 }
 
-/* MODAL */
-/* General */
-/* Botón para pedir cita */
+/* Estilos para el botón de hacer cita */
 .user-make-appointment-btn {
-    background-color: #2E86C1;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: var(--dark-blue); /* Fondo azul oscuro */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 8px; /* Bordes redondeados */
+    padding: 1rem 2rem; /* Relleno dentro del botón */
+    font-size: 1.2rem; /* Tamaño de fuente */
+    font-weight: bold; /* Negrita */
+    cursor: pointer; /* Indica que es clickeable */
+    box-shadow: 0 4px 6px var(--light-box-shadow-color); /* Sombra ligera */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transición para efectos de hover */
 }
 
+/* Efecto hover sobre el botón */
 .user-make-appointment-btn:hover {
-    background-color: #1A5276;
-    transform: scale(1.05);
+    background-color: #1A5276; /* Cambio de color a un tono más oscuro */
+    transform: scale(1.05); /* Agranda ligeramente el botón */
 }
 
-/* Modal */
+/* Modal - Estilo general del modal */
 .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.4s ease-in-out;
+    display: none; /* Por defecto, el modal está oculto */
+    position: fixed; /* Posición fija respecto a la ventana */
+    top: 0; /* Se coloca en la parte superior */
+    left: 0; /* Se coloca en la parte izquierda */
+    width: 100vw; /* Ocupa todo el ancho de la ventana */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    background-color: var(--modal-overlay-bg); /* Fondo semi-transparente */
+    justify-content: center; /* Centra el contenido del modal */
+    align-items: center; /* Centra verticalmente */
+    z-index: 1000; /* Asegura que el modal esté encima de otros elementos */
+    opacity: 0; /* Inicia con opacidad 0 */
+    transition: opacity 0.4s ease-in-out; /* Transición de opacidad */
 }
 
+/* Cuando el modal tiene la clase 'show', se muestra */
 .modal.show {
-    display: flex;
-    opacity: 1;
+    display: flex; /* Muestra el modal con 'flex' */
+    opacity: 1; /* Hace visible el modal */
 }
 
+/* Estilo del contenido del modal */
 .modal-content {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 500px;
-    animation: fadeIn 0.4s ease-in-out;
+    background-color: white; /* Fondo blanco */
+    padding: 2rem; /* Espaciado dentro del modal */
+    border-radius: 12px; /* Bordes redondeados */
+    position: relative; /* Necesario para el posicionamiento del botón de cerrar */
+    box-shadow: 0 4px 8px var(--regular-box-shadow-color); /* Sombra del modal */
+    width: 90%; /* Ancho máximo del 90% */
+    max-width: 500px; /* Ancho máximo de 500px */
+    animation: fadeIn 0.4s ease-in-out; /* Animación de entrada */
 }
 
+/* Estilos específicos para ciertos modales */
 #modal-past-appointments .modal-content {
-    max-width: 600px;
+    max-width: 600px; /* Ancho mayor para este modal específico */
 }
 
 #doctor-modal .modal-content {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: none;
-    animation: fadeIn 0.4s ease-in-out;
+    max-width: none; /* No tiene restricción de tamaño */
 }
 
-/* Animaciones del modal */
+/* Animación de fadeIn para mostrar el modal */
 @keyframes fadeIn {
     from {
-        transform: scale(0.9);
-        opacity: 0;
+        transform: scale(0.9); /* Comienza más pequeño */
+        opacity: 0; /* Comienza invisible */
     }
     to {
-        transform: scale(1);
-        opacity: 1;
+        transform: scale(1); /* Termina con el tamaño normal */
+        opacity: 1; /* Se vuelve completamente visible */
     }
 }
 
+/* Animación de fadeOut para ocultar el modal */
 @keyframes fadeOut {
     from {
-        transform: scale(1);
-        opacity: 1;
+        transform: scale(1); /* Comienza en tamaño normal */
+        opacity: 1; /* Comienza visible */
     }
     to {
-        transform: scale(0.9);
-        opacity: 0;
+        transform: scale(0.9); /* Termina un poco más pequeño */
+        opacity: 0; /* Se vuelve invisible */
     }
 }
 
+/* Cuando el modal tiene la clase 'hide', se aplica fadeOut */
 .modal.hide .modal-content {
-    animation: fadeOut 0.4s ease-in-out;
+    animation: fadeOut 0.4s ease-in-out; /* Animación de salida */
 }
 
-/* Botón para cerrar modal */
+/* Botón de cerrar el modal */
 .close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #333333;
-    cursor: pointer;
-    transition: color 0.3s ease;
+    position: absolute; /* Posicionado absolutamente dentro del modal */
+    top: 1rem; /* Colocado 1rem desde la parte superior */
+    right: 1rem; /* Colocado 1rem desde la parte derecha */
+    background: none; /* Sin fondo */
+    border: none; /* Sin borde */
+    font-size: 1.5rem; /* Tamaño de fuente más grande */
+    color: var(--close-button-color); /* Color del botón de cerrar */
+    cursor: pointer; /* Indica que es clickeable */
+    transition: color 0.3s ease; /* Transición en el color */
 }
 
+/* Efecto hover sobre el botón de cerrar */
 .close-btn:hover {
-    color: #ff5252;
+    color: var(--close-button-hover-color); /* Cambia de color cuando se pasa el ratón */
 }
 
-/* Estilo de los inputs y textarea dentro del modal */
+/* Estilos de los inputs y textarea dentro del modal */
 .modal-content label:not(#chronic label) {
-    display: block;
-    margin: 1rem 0 0.5rem;
-    font-weight: bold;
-    color: #2C3E50;
+    display: block; /* Muestra las etiquetas como bloques */
+    margin: 1rem 0 0.5rem; /* Espaciado alrededor de las etiquetas */
+    font-weight: bold; /* Texto en negrita */
+    color: var(--secondary-text-color); /* Color del texto */
 }
 
 .modal-content select,
 .modal-content input:not(input[type="checkbox"]),
 .modal-content textarea {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #D6DBDF;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    resize: none;
+    width: 100%; /* Ocupa todo el ancho disponible */
+    padding: 0.8rem; /* Relleno dentro de los campos */
+    border: 1px solid var(--gray-border-color); /* Borde gris */
+    border-radius: 8px; /* Bordes redondeados */
+    margin-bottom: 1rem; /* Espaciado debajo de los campos */
+    font-size: 1rem; /* Tamaño de fuente */
+    resize: none; /* Desactiva el redimensionamiento de los campos textarea */
 }
 
 .modal-content h2:not(.doctor-modal .modal-content h2) {
-    margin-bottom: 12px;
-    font-size: 2.2rem;
+    margin-bottom: 12px; /* Añade un espacio debajo del título */
+    font-size: 2.2rem; /* Define el tamaño de la fuente */
 }
 
 .doctor-modal .modal-content h2 {
-    margin: 12px;
-    font-weight: 700;
-    font-size: 2.2rem;
+    margin: 12px; /* Aplica margen de 12px en todos los lados */
+    font-weight: 700; /* Establece el peso de la fuente a negrita */
+    font-size: 2.2rem; /* Define el tamaño de la fuente */
 }
 
-
 .modal-content span {
-    font-weight: bold;
+    font-weight: bold; /* Aplica un peso de fuente en negrita */
 }
 
 .modal-medication {
-    list-style: none;
-    padding-left: 12px;
+    list-style: none; /* Elimina los puntos de la lista */
+    padding-left: 12px; /* Añade un margen a la izquierda */
 }
 
-/* Botón de envío dentro del modal */
 .modal-submit-btn {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    display: block;
-    margin: 1rem auto 0 auto;
-    width: 60%;
+    background-color: var(--primary-color); /* Color de fondo del botón */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 0.8rem 1.5rem; /* Espaciado interno en el botón */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 1rem; /* Tamaño de la fuente */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    display: block; /* Hace que el botón sea un bloque */
+    margin: 1rem auto 0 auto; /* Centra el botón horizontalmente */
+    width: 60%; /* Define el ancho del botón */
 }
 
 .modal-submit-btn:hover {
-    background-color: #2980b9;
+    background-color: var(--hover-color); /* Cambia el color de fondo al pasar el ratón */
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .patient-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
+        display: flex; /* Muestra el contenedor como flexbox */
+        flex-direction: column; /* Organiza los elementos en columna */
+        gap: 1.5rem; /* Espacio entre los elementos */
     }
 
     section {
-        max-width: 100%;
+        max-width: 100%; /* Asegura que la sección ocupe todo el ancho disponible */
     }
 }
 
 /* Modal */
 #doctor-modal .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.4s ease-in-out;
-    overflow-y: auto; /* Habilitar desplazamiento si es necesario */
+    display: none; /* Inicialmente, el modal está oculto */
+    position: fixed; /* Fija el modal en la pantalla */
+    top: 0; /* Coloca el modal en la parte superior */
+    left: 0; /* Coloca el modal en la parte izquierda */
+    width: 100vw; /* Hace que el modal ocupe el 100% del ancho de la pantalla */
+    height: 100vh; /* Hace que el modal ocupe el 100% de la altura de la pantalla */
+    background-color: var(--modal-overlay-bg); /* Fondo semitransparente del modal */
+    justify-content: center; /* Centra el contenido del modal horizontalmente */
+    align-items: center; /* Centra el contenido del modal verticalmente */
+    z-index: 1000; /* Coloca el modal por encima de otros elementos */
+    opacity: 0; /* Inicialmente, el modal es transparente */
+    transition: opacity 0.4s ease-in-out; /* Animación de transición de la opacidad */
+    overflow-y: auto; /* Permite desplazarse verticalmente si el contenido excede la altura */
 }
 
 #doctor-modal .modal.show {
-    display: flex;
-    opacity: 1;
+    display: flex; /* Muestra el modal como un contenedor flex */
+    opacity: 1; /* Hace que el modal sea completamente visible */
 }
 
 #doctor-modal .modal-content {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 800px; /* Ampliar el ancho máximo */
-    max-height: 90vh; /* Limitar la altura para evitar desbordamientos */
-    overflow-y: auto; /* Agregar desplazamiento interno para contenido largo */
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+    background-color: white; /* Color de fondo del contenido del modal */
+    padding: 2rem; /* Espaciado interno */
+    border-radius: 12px; /* Bordes redondeados */
+    position: relative; /* Posiciona el contenido relativo al modal */
+    box-shadow: 0 4px 8px var(--regular-box-shadow-color); /* Sombra del cuadro */
+    width: 90%; /* Ancho del contenido del modal */
+    max-width: 800px; /* Ancho máximo */
+    max-height: 90vh; /* Altura máxima */
+    overflow-y: auto; /* Permite desplazarse si el contenido excede la altura */
+    animation: fadeIn 0.4s ease-in-out; /* Animación de entrada */
 }
 
 #doctor-modal.hide .modal-content {
-    animation: fadeOut 0.4s ease-in-out;
+    animation: fadeOut 0.4s ease-in-out; /* Animación de salida */
 }
 
-@keyframes fadeOut {
-    from {
-        transform: scale(1);
-        opacity: 1;
-    }
-    to {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-}
-
-/* Botón para cerrar modal */
 #doctor-modal .close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #333333;
-    cursor: pointer;
-    transition: color 0.3s ease;
+    position: absolute; /* Posiciona el botón de cierre de manera absoluta */
+    top: 1rem; /* Coloca el botón de cierre 1rem desde la parte superior */
+    right: 1rem; /* Coloca el botón de cierre 1rem desde el lado derecho */
+    background: none; /* Elimina el fondo del botón */
+    border: none; /* Elimina el borde */
+    font-size: 1.5rem; /* Tamaño de la fuente */
+    color: var(--close-button-color); /* Color del texto del botón */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: color 0.3s ease; /* Transición suave para el color */
 }
 
 #doctor-modal .close-btn:hover {
-    color: #ff5252;
+    color: var(--close-button-hover-color); /* Cambia el color del botón al pasar el ratón */
 }
 
-/* Estilo de los inputs y textarea dentro del modal */
 #doctor-modal label:not(#chronic label) {
-    display: block;
-    margin: 1rem 0 0.5rem;
-    font-weight: bold;
-    color: #2C3E50;
+    display: block; /* Hace que el label ocupe una línea completa */
+    margin: 1rem 0 0.5rem; /* Margen superior e inferior */
+    font-weight: bold; /* Aplica negrita */
+    color: var(--secondary-text-color); /* Color del texto */
 }
 
 #doctor-modal div:not(#chronic):not(.errors) {
-    border: 1.3px solid #D6DBDF;
-    margin: 4px;
-    padding: 8px;
-    border-radius: 8px;
-    margin-bottom: 24px;
+    border: 1.3px solid var(--gray-border-color); /* Borde gris */
+    margin: 4px; /* Márgenes alrededor del div */
+    padding: 8px; /* Relleno interno */
+    border-radius: 8px; /* Bordes redondeados */
+    margin-bottom: 24px; /* Espaciado inferior */
 }
 
 .main-appointment-form div .errors {
-    margin: 8px;
+    margin: 8px; /* Márgenes alrededor del div de errores */
 }
 
 #chronic {
-    display: flex;
-    color: #2C3E50;
-    gap: 8px;
-    font-weight: bold;
+    display: flex; /* Organiza los elementos de forma flexible */
+    color: var(--secondary-text-color); /* Color del texto */
+    gap: 8px; /* Espaciado entre los elementos */
+    font-weight: bold; /* Aplica negrita */
 }
 
 .errors span {
     text-align: center; /* Alinea el texto al centro */
     text-transform: uppercase; /* Convierte el texto a mayúsculas */
     color: rgb(202, 41, 41); /* Cambia el color del texto a rojo */
-    display: block;
-    width: 100%;
-    font-size: 0.9rem;
-    font-weight: 600; /* Asegura que el texto ocupe toda la línea */
+    display: block; /* Hace que el span ocupe toda la línea */
+    width: 100%; /* Hace que el span ocupe el 100% del ancho */
+    font-size: 0.9rem; /* Tamaño de la fuente */
+    font-weight: 600; /* Peso de la fuente */
 }
 
-
 .doctor-container h2 {
-    margin: 1rem 0 1rem 0;
+    margin: 1rem 0 1rem 0; /* Espaciado superior e inferior */
 }
 
 .doctor-container span {
-    margin: 0.3rem 0 0.3rem 0;
+    margin: 0.3rem 0 0.3rem 0; /* Espaciado alrededor del span */
 }
 
 #doctor-modal div h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin: 1.3rem 0;
+    font-size: 1.3rem; /* Tamaño de la fuente */
+    font-weight: 600; /* Peso de la fuente */
+    margin: 1.3rem 0; /* Espaciado superior e inferior */
 }
 
 #doctor-modal select,
 #doctor-modal input:not(input[type="checkbox"]),
 #doctor-modal textarea {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #D6DBDF;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    resize: none;
+    width: 100%; /* Hace que los elementos ocupen todo el ancho */
+    padding: 0.8rem; /* Relleno interno */
+    border: 1px solid var(--gray-border-color); /* Borde gris */
+    border-radius: 8px; /* Bordes redondeados */
+    margin-bottom: 1rem; /* Espaciado inferior */
+    font-size: 1rem; /* Tamaño de la fuente */
+    resize: none; /* Desactiva el cambio de tamaño en el textarea */
 }
 
-/* Botón de envío dentro del modal */
 #doctor-modal .modal-submit-btn {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    display: block;
-    margin: 1rem auto 0 auto;
-    width: 60%;
+    background-color: var(--primary-color); /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 0.8rem 1.5rem; /* Relleno interno */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 1rem; /* Tamaño de la fuente */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    display: block; /* Hace que el botón sea un bloque */
+    margin: 1rem auto 0 auto; /* Centra el botón horizontalmente */
+    width: 60%; /* Ancho del botón */
 }
 
 #doctor-modal .modal-submit-btn:hover {
-    background-color: #2980b9;
+    background-color: var(--hover-color); /* Cambia el color de fondo al pasar el ratón */
 }
 
-/* Botón de envío dentro del modal */
 .intra-btn {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    display: block;
-    margin: 1rem auto 1rem auto;
-    width: 30%;
+    background-color: var(--primary-color); /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 0.8rem 1.5rem; /* Relleno interno */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 1rem; /* Tamaño de la fuente */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    display: block; /* Hace que el botón sea un bloque */
+    margin: 1rem auto 1rem auto; /* Centra el botón horizontalmente */
+    width: 30%; /* Ancho del botón */
 }
 
 .intra-btn:hover {
-    background-color: #2980b9;
+    background-color: var(--hover-color); /* Cambia el color de fondo al pasar el ratón */
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     #doctor-modal .modal-content {
-        width: 95%; /* Reducir el ancho en pantallas pequeñas */
-        max-height: 85vh; /* Asegurarse de que no desborde */
+        width: 95%; /* Ajusta el ancho del modal al 95% de la pantalla en dispositivos pequeños */
+        max-height: 85vh; /* Limita la altura máxima al 85% de la altura de la ventana */
     }
 }
 
 .medicines table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 12px;
-    overflow: hidden;
+    width: 100%; /* Establece que la tabla ocupe todo el ancho disponible */
+    border-collapse: collapse; /* Elimina el espacio entre los bordes de las celdas */
+    border-radius: 12px; /* Redondea las esquinas de la tabla */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga de la tabla */
 }
 
 .medicines table th,
 .medicines table td {
-    padding: 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #E5E8E8;
-    text-align: center;
+    padding: 0.8rem; /* Añade un relleno de 0.8rem a las celdas */
+    text-align: left; /* Alinea el texto a la izquierda por defecto */
+    border-bottom: var(--table-border-bottom); /* Aplica el borde inferior a las celdas */
+    text-align: center; /* Centra el texto en ambas celdas */
 }
 
 .medicines table th {
-    background-color: #3498DB;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-align: center;
+    background-color: var(--primary-color); /* Aplica el color de fondo principal a los encabezados de columna */
+    color: white; /* Cambia el color del texto a blanco */
+    font-weight: bold; /* Pone el texto en negrita */
+    text-align: center; /* Centra el texto en los encabezados de columna */
 }
 
 .medicines table tbody tr:nth-child(even) {
-    background-color: #F8F9F9;
+    background-color: var(--table-background-color); /* Establece un color de fondo alternativo para las filas pares */
 }
 
 .medicines table tbody tr:hover {
-    background-color: #D6EAF8;
-    cursor: pointer;
+    background-color: var(--final-gradient-color); /* Cambia el fondo de la fila al pasar el ratón */
+    cursor: pointer; /* Muestra un cursor tipo puntero */
 }
 
-/* Estilo para los botones de la tabla */
 .medicines table button {
-    background-color: #3498DB;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    background-color: var(--primary-color); /* Establece el color de fondo del botón */
+    color: white; /* Establece el color del texto a blanco */
+    border: none; /* Elimina el borde del botón */
+    padding: 0.6rem 1.2rem; /* Añade relleno alrededor del texto en el botón */
+    font-size: 1rem; /* Establece el tamaño de la fuente del texto del botón */
+    border-radius: 5px; /* Redondea las esquinas del botón */
+    cursor: pointer; /* Muestra un cursor tipo puntero */
+    transition: background-color 0.3s ease; /* Añade una transición suave al fondo del botón al pasar el ratón */
 }
 
 .medicines table button:hover {
-    background-color: #2980B9;
+    background-color: var(--hover-color); /* Cambia el color de fondo cuando se pasa el ratón por encima */
 }
 
-/* * Estilos página doctor */
+/* Estilos página doctor */
 .doctor-container {
-    display: grid;
-    place-items: center;
+    display: grid; /* Usa un diseño en cuadrícula */
+    place-items: center; /* Centra los elementos dentro de la cuadrícula */
     grid-template-areas:
         "user-info doctor-appointments-next-seven-days"
-        "doctor-today-appointments doctor-today-appointments";
-    grid-gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 2rem auto;
-    background: linear-gradient(135deg, #EAF6FF, #D6EAF8);
+        "doctor-full-appointments-next-seven-days doctor-full-appointments-next-seven-days" /* Define las áreas de la cuadrícula */
+        "doctor-today-appointments doctor-today-appointments"; /* Define las áreas de la cuadrícula */
+    grid-gap: 2rem; /* Añade un espacio de 2rem entre las celdas de la cuadrícula */
+    padding: 2rem; /* Añade relleno alrededor del contenedor */
+    max-width: 1200px; /* Establece el ancho máximo del contenedor */
+    margin: 2rem auto; /* Centra el contenedor con márgenes automáticos */
+    background: linear-gradient(135deg, var(--initial-gradient-color), var(--final-gradient-color)); /* Aplica un gradiente de fondo */
 }
 
 .doctor-container .user-info {
-    grid-area: user-info;
+    grid-area: user-info; /* Asigna el área de cuadrícula para la información del usuario */
 }
 
 .doctor-container .doctor-appointments-next-seven-days {
-    grid-area: doctor-appointments-next-seven-days;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    grid-area: doctor-appointments-next-seven-days; /* Asigna el área de cuadrícula para las citas de los próximos siete días */
+    display: flex; /* Usa el diseño de flexbox para los elementos dentro */
+    flex-direction: column; /* Organiza los elementos de arriba hacia abajo */
+    align-items: center; /* Centra los elementos dentro del contenedor */
+}
+
+.doctor-container .doctor-full-appointments-next-seven-days {
+    grid-area: doctor-full-appointments-next-seven-days; /* Asigna el área de cuadrícula para las citas de hoy */
 }
 
 .doctor-container .doctor-today-appointments {
-    grid-area: doctor-today-appointments;
+    grid-area: doctor-today-appointments; /* Asigna el área de cuadrícula para las citas de hoy */
 }
 
 .doctor-container .doctor-appointments-next-seven-days span {
-    font-size: 8rem;
-    color: #2E86C1;
-    font-weight: 900;
-    margin: 0 auto;
+    font-size: 8rem; /* Establece un tamaño de fuente grande para el número de citas */
+    color: var(--dark-blue); /* Establece el color del texto a azul oscuro */
+    font-weight: 900; /* Hace que el texto sea muy grueso */
+    margin: 0 auto; /* Centra el elemento horizontalmente */
 }
 
 .doctor-container .doctor-appointments-next-seven-days h5 {
-    font-size: 1.5rem;
-    color: #2E86C1;
-    margin-bottom: 0;
-    border-bottom: none;
-    padding-bottom: 0;
+    font-size: 1.5rem; /* Establece un tamaño de fuente medio */
+    color: var(--dark-blue); /* Establece el color del texto a azul oscuro */
+    margin-bottom: 0; /* Elimina el margen inferior */
+    border-bottom: none; /* Elimina el borde inferior */
+    padding-bottom: 0; /* Elimina el relleno inferior */
 }
 
-
 .doctor-container h5 {
-    font-size: 1.5rem;
-    color: #2E86C1;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #AED6F1;
-    padding-bottom: 0.5rem;
+    font-size: 1.5rem; /* Establece un tamaño de fuente medio */
+    color: var(--dark-blue); /* Establece el color del texto a azul oscuro */
+    margin-bottom: 1rem; /* Añade un margen inferior */
+    border-bottom: 2px solid var(--blue-border-lighter); /* Aplica un borde inferior */
+    padding-bottom: 0.5rem; /* Añade relleno al fondo */
 }
 
 .doctor-container .doctor-info ul {
-    list-style: none;
-    padding: 0;
+    list-style: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el relleno de la lista */
 }
 
 .doctor-container .doctor-info ul li {
-    margin-bottom: 0.8rem;
-    font-size: 1rem;
-    color: #5D6D7E;
+    margin-bottom: 0.8rem; /* Añade un margen inferior entre los elementos de la lista */
+    font-size: 1rem; /* Establece un tamaño de fuente normal */
+    color: var(--light-gray); /* Establece el color del texto a gris claro */
 }
 
 .doctor-container .doctor-info ul li span {
-    font-weight: bold;
+    font-weight: bold; /* Hace que el texto dentro del span esté en negrita */
 }
 
 .doctor-container table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 12px;
-    overflow: hidden;
+    width: 100%; /* Establece que la tabla ocupe todo el ancho disponible */
+    border-collapse: collapse; /* Elimina el espacio entre los bordes de las celdas */
+    border-radius: 12px; /* Redondea las esquinas de la tabla */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga de la tabla */
 }
 
 .doctor-container table th,
 .doctor-container table td {
-    padding: 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #E5E8E8;
-    text-align: center;
+    padding: 0.8rem; /* Añade relleno alrededor del texto en las celdas */
+    text-align: left; /* Alinea el texto a la izquierda por defecto */
+    border-bottom: var(--table-border-bottom); /* Aplica el borde inferior a las celdas */
+    text-align: center; /* Centra el texto en ambas celdas */
 }
 
 .doctor-container table th {
-    background-color: #3498DB;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-align: center;
+    background-color: var(--primary-color); /* Aplica el color de fondo principal a los encabezados de columna */
+    color: white; /* Cambia el color del texto a blanco */
+    font-weight: bold; /* Pone el texto en negrita */
+    text-align: center; /* Centra el texto en los encabezados de columna */
 }
 
 .doctor-container table tbody tr:nth-child(even) {
-    background-color: #F8F9F9;
+    background-color: var(--table-background-color); /* Establece un color de fondo alternativo para las filas pares */
 }
 
 .doctor-container table tbody tr:hover {
-    background-color: #D6EAF8;
-    cursor: pointer;
+    background-color: var(--final-gradient-color); /* Cambia el fondo de la fila al pasar el ratón */
+    cursor: pointer; /* Muestra un cursor tipo puntero */
 }
 
-/* Estilo para los botones de la tabla */
 .doctor-container table button {
-    background-color: #3498DB;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    background-color: var(--primary-color); /* Establece el color de fondo del botón */
+    color: white; /* Establece el color del texto a blanco */
+    border: none; /* Elimina el borde del botón */
+    padding: 0.6rem 1.2rem; /* Añade relleno alrededor del texto en el botón */
+    font-size: 1rem; /* Establece el tamaño de la fuente del texto del botón */
+    border-radius: 5px; /* Redondea las esquinas del botón */
+    cursor: pointer; /* Muestra un cursor tipo puntero */
+    transition: background-color 0.3s ease; /* Añade una transición suave al fondo del botón al pasar el ratón */
 }
 
 .doctor-container table button:hover {
-    background-color: #2980B9;
+    background-color: var(--hover-color); /* Cambia el color de fondo cuando se pasa el ratón por encima */
 }
-
-/* Modal */
-
 
 /* Estilos página 404 */
-/* Fondo de la página */
 .error-main {
-    height: 100dvh;
-    width: 100dvw;
-    background: linear-gradient(135deg, #FFFFFF, #D6EAF8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 100dvh; /* Establece la altura a la altura total de la ventana */
+    width: 100dvw; /* Establece el ancho a todo el ancho de la ventana */
+    background: linear-gradient(135deg, white, var(--final-gradient-color)); /* Aplica un gradiente de fondo */
+    display: flex; /* Usa flexbox para centrar el contenido */
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
 }
 
-/* Contenedor principal */
 .error-container {
-    text-align: center;
-    padding: 2rem;
-    background-color: #fff;
-    border: 1px solid #AED6F1;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
+    text-align: center; /* Centra el texto dentro del contenedor */
+    padding: 2rem; /* Añade relleno alrededor del contenido */
+    background-color: white; /* Establece el color de fondo blanco */
+    border: 1px solid var(--blue-border-lighter); /* Añade un borde con color gris claro */
+    border-radius: 12px; /* Redondea las esquinas del contenedor */
+    box-shadow: 0 4px 10px var(--light-box-shadow-color); /* Aplica una sombra suave alrededor del contenedor */
+    max-width: 400px; /* Establece el ancho máximo del contenedor */
+    width: 100%; /* Establece el contenedor para ocupar el 100% del ancho disponible */
 }
 
-/* Título del error */
 .error-container h1 {
-    font-size: 6rem;
-    color: #5DADE2; /* Azul intenso */
-    margin-bottom: 1rem;
+    font-size: 6rem; /* Establece un tamaño de fuente grande */
+    color: var(--sparking-blue); /* Establece un color azul brillante para el texto */
+    margin-bottom: 1rem; /* Añade margen en la parte inferior */
 }
 
-/* Mensaje descriptivo */
 .error-container p {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 2rem;
+    font-size: 1.2rem; /* Establece un tamaño de fuente normal */
+    color: #333; /* Establece el color del texto a gris oscuro */
+    margin-bottom: 2rem; /* Añade margen en la parte inferior */
 }
 
-/* Botón */
+/* Estilos para el botón "Back" en la página de error */
 .error-container .back-button {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: #85C1E9; /* Azul cielo */
-    color: #fff;
-    font-size: 1rem;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block; /* Hace que el botón sea un bloque en línea para mantener su tamaño ajustado al contenido */
+    padding: 0.75rem 1.5rem; /* Añade espacio alrededor del texto dentro del botón */
+    background-color: var(--light-blue); /* Establece el color de fondo usando una variable de color */
+    color: white; /* Establece el color del texto del botón */
+    font-size: 1rem; /* Tamaño de fuente estándar */
+    font-weight: bold; /* Hace el texto en negrita */
+    text-decoration: none; /* Elimina cualquier subrayado del enlace */
+    border-radius: 8px; /* Bordes redondeados para darle un aspecto suave al botón */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Suaviza las transiciones de color de fondo y transformación */
 }
 
-/* Hover y active del botón */
+/* Efecto hover para el botón "Back" */
 .error-container .back-button:hover {
-    background-color: #5DADE2; /* Azul más intenso */
-    transform: translateY(-2px);
+    background-color: var(--sparking-blue); /* Cambia el color de fondo cuando el usuario pasa el mouse sobre el botón */
+    transform: translateY(-2px); /* Eleva ligeramente el botón hacia arriba al hacer hover */
 }
 
+/* Efecto cuando se hace clic en el botón "Back" */
 .error-container .back-button:active {
-    transform: translateY(0);
+    transform: translateY(0); /* Restablece la posición del botón cuando se hace clic */
+}
+
+/* Estilos para el botón de "log out" (cerrar sesión) */
+.log-out {
+    position: fixed; /* Fija el botón en la parte inferior de la pantalla */
+    bottom: 24px; /* Establece el margen inferior para colocar el botón hacia abajo */
+    left: 24px; /* Establece el margen izquierdo para alinear el botón a la izquierda */
+    display: flex; /* Usa el modelo de diseño flexible para alinear el contenido */
+    justify-content: center; /* Centra el contenido dentro del contenedor */
+    align-items: center; /* Alinea los elementos verticalmente en el centro */
+    padding-right: 8px; /* Ajuste de padding para mayor simetría en el lado derecho */
+    background-color: white; /* Color de fondo del botón */
+    border-radius: 12px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor a una mano cuando se pasa sobre el botón */
+    transition: background-color 0.3s ease-in-out; /* Transición suave para el cambio de color de fondo */
+}
+
+/* Estilo para el estado hover del botón "log out" */
+.log-out:hover {
+    background-color: var(--primary-color); /* Cambia el color de fondo cuando el usuario pasa el mouse sobre el botón */
 }

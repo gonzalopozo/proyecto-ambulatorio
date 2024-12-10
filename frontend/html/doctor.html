@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor</title>
+    <title>Doctor</title> <!-- Título de la página que se muestra en la pestaña del navegador -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/normalize.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/normalize.css"> <!-- Normalize ayuda a estandarizar el estilo en diferentes navegadores -->
+    <link rel="stylesheet" href="../css/style.css">  <!-- Estilos personalizados para la página -->
+    <link rel="shortcut icon" href="../assets/favicon/favicon.png"> <!-- Icono de la página -->
 </head>
 <body>
     <header>
+        <!-- Título de bienvenida y espacio para mostrar el nombre del usuario -->
         <h1>Bienvenido <span class="user-name-header"></span></h1>
+        <!-- Espacio para mostrar la hora actual -->
         <h3 class="clock"></h3>
     </header>
 
     <main>
         <div class="doctor-container">
             <section class="doctor-info">
+                <!-- Sección con información personal del doctor -->
                 <h5>Información personal:</h5>
                 <ul>
                     <li>Nombre completo: <span class="doctor-name"></span></li>
@@ -29,11 +33,30 @@
             </section>
     
             <section class="doctor-appointments-next-seven-days">
+                <!-- Sección para mostrar la cantidad de consultas próximas -->
                 <span></span>
                 <h5>consultas en los próximos siete días</h5>
             </section>
     
+            <section class="doctor-full-appointments-next-seven-days">
+                <!-- Tabla de consultas completas para los próximos siete días -->
+                <h5>Consultas de los próximos siete días:</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Paciente</th>
+                            <th>Sintomatología</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+
             <section class="doctor-today-appointments">
+                <!-- Tabla de consultas programadas para el día de hoy -->
                 <h5>Consultas de hoy:</h5>
                 <table>
                     <thead>
@@ -51,7 +74,9 @@
         </div>
 
         <div class="modal" id="doctor-modal">
+            <!-- Modal para mostrar y registrar detalles de una consulta -->
             <div class="modal-content">
+                <!-- Botón para cerrar el modal -->
                 <span class="close-btn">&times;</span>
                 <h2>Consulta:</h2>
                 <form class="main-appointment-form">
@@ -59,9 +84,11 @@
                     <div>
                         <h3>Información general de la consulta</h3>
 
+                        <!-- Campos ocultos para ID de la cita y del paciente -->
                         <input type="text" id="hide" class="appointment-id">
                         <input type="text" id="hide" class="patient-id">
 
+                        <!-- Información del doctor y paciente -->
                         <label for="doctor-name">Nombre del doctor:</label>
                         <input type="text" name="doctor-name" id="doctor-name" readonly>
 
@@ -75,8 +102,9 @@
                         <textarea name="symptomatology" id="symptomatology" readonly></textarea>
 
                         <label for="diagnosis">Diagnóstico:</label>
-                        <textarea name="diagnosis" id="diagnosis"></textarea>
+                        <textarea name="diagnosis" id="diagnosis" placeholder="Rellena el diagnóstico del estado del paciente"></textarea>
 
+                        <!-- Espacio para mostrar errores de diagnóstico -->
                         <div class="errors">
                             <span id="diagnosis-er"></span>
                         </div>
@@ -85,21 +113,23 @@
 
                     <div class="medicines">
                         <h3>Medicación</h3>
+                        <!-- Formulario para seleccionar medicación y detalles -->
                         <label for="medication-select">Medicamentos</label>
                         <select name="medication" id="medication-select">
                             <option value="" disabled selected>Selecciona una opción</option>
                         </select>
 
                         <label for="medication-quantity">Cantidad:</label>
-                        <input type="text" name="medication-quantity" id="medication-quantity">
+                        <input type="text" name="medication-quantity" id="medication-quantity" >
 
                         <label for="medication-frequency">Frecuencia:</label>
                         <input type="text" name="medication-frequency" id="medication-frequency">
 
                         <label for="medication-duration">Número de días:</label>
-                        <input type="text" name="medication-duration" id="medication-duration">
+                        <input type="text" name="medication-duration" id="medication-duration" >
 
                         <div id="chronic">
+                            <!-- Opción para indicar si la condición es crónica -->
                             <input type="checkbox" name="chronic-condition" id="chronic-condition">
                             <label for="chronic-condition">¿Crónica?</label>    
                         </div>
@@ -111,8 +141,10 @@
                             <span id="days-er"></span>
                         </div>
 
+                        <!-- Botón para añadir medicación a la lista -->
                         <button type="button" class="intra-btn" id="add-medication-btn">¡Añadir medicación!</button>
 
+                        <!-- Tabla para mostrar la medicación añadida -->
                         <table>
                             <thead>
                                 <tr>
@@ -134,6 +166,7 @@
 
                     <div>
                         <h3>PDF:</h3>
+                        <!-- Campo para subir un archivo PDF relacionado con la consulta -->
                         <label for="upload-pdf" accept=".pdf">Subir PDF:</label>
                         <input type="file" name="upload-pdf" id="upload-pdf">
                     </div>
@@ -141,14 +174,16 @@
                     <div class="new-Appt">
                         <h3>Derivar Cita</h3>
 
+                        <!-- Selección de un doctor para derivar la cita -->
                         <label for="doctor-select">Selecciona un doctor:</label>
                         <select id="doctor-select" name="doctor"></select>
 
+                        <!-- Selección de una fecha y hora para la nueva cita -->
                         <label for="appointment-date">Selecciona una fecha y hora:</label>
                         <input type="datetime-local" id="new-appointment-date" name="date">
 
                         <label for="appointment-symptomatology">Sintomatología:</label>
-                        <textarea id="appointment-symptomatology" name="symptomatology"></textarea>
+                        <textarea id="appointment-symptomatology" name="symptomatology" placeholder="Rellena tu sintomatología de forma opcional"></textarea>
 
                         <div class="errors">
                             <span id="new-appointment-er"></span>
@@ -158,12 +193,19 @@
 
                     </div>
 
+                    <!-- Botón para registrar la cita -->
                     <button class="modal-submit-btn" id="register-appointment-btn" type="submit">¡Registrar!</button>
                 </form>
             </div>
         </div>
+
+        <!-- Enlace para cerrar sesión -->
+        <a class="log-out" href="../index.html">
+            <img src="../assets/icons/logOut.png" alt="Finalizar sesión">
+        </a>
     </main>
 
+    <!-- Scripts para funcionalidades adicionales -->
     <script type="module" src="../js/helpers/utils.mjs"></script>
     <script type="module" src="../js/doctor.js"></script>
 </body>

@@ -1,27 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient</title>
+    <title>Paciente</title> <!-- Título de la página que se muestra en la pestaña del navegador -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/normalize.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/normalize.css"> <!-- Normalize ayuda a estandarizar el estilo en diferentes navegadores -->
+    <link rel="stylesheet" href="../css/style.css"> <!-- Estilos personalizados para la página -->
+    <link rel="shortcut icon" href="../assets/favicon/favicon.png"> <!-- Icono de la página -->
 </head>
-<body class="patient-body">
-    <header class="patient-header">
-        <h1>Bienvenido <span class="user-name-header"></span></h1>
-        <h3 class="clock"></h3>
-    </header>
-    <main>
-        <div class="patient-container">
-            <section class="user-info">
-                <h5>Información personal:</h5>
-                <!-- <hr> -->
+<body class="patient-body"> <!-- Cuerpo de la página con clase para estilos específicos del paciente -->
     
-                <ul>
+    <header class="patient-header"> <!-- Cabecera de la página que incluye el saludo y reloj -->
+        <h1>Bienvenido <span class="user-name-header"></span></h1> <!-- Bienvenida al paciente -->
+        <h3 class="clock"></h3> <!-- Reloj para mostrar la hora actual -->
+    </header>
+    
+    <main> <!-- Contenedor principal de la página -->
+        <div class="patient-container"> <!-- Contenedor para toda la información del paciente -->
+            
+            <section class="user-info"> <!-- Sección con la información personal del paciente -->
+                <h5>Información personal:</h5> <!-- Título de la sección -->
+                <!-- <hr> --> <!-- Línea horizontal comentada que podría separa las secciones -->
+    
+                <ul> <!-- Lista de detalles personales del paciente -->
                     <li>Nombre completo: <span class="user-name"></span></li>
                     <li>Email: <span class="user-email"></span></li>
                     <li>DNI: <span class="user-dni"></span></li>
@@ -32,28 +36,28 @@
                 </ul>
             </section>
             
-            <section class="user-current-medication">
-                <h5>Medicación actual:</h5>
-                <!-- <hr> -->
-                <table>
+            <section class="user-current-medication"> <!-- Sección con la medicación actual del paciente -->
+                <h5>Medicación actual:</h5> <!-- Título de la sección -->
+                <!-- <hr> --> <!-- Línea horizontal comentada -->
+                <table> <!-- Tabla para mostrar la medicación -->
                     <thead>
                         <tr>
                             <th>Nombre</th>
                             <th>Posología</th>
-                            <th>¿Es cronica?</th>
+                            <th>¿Es crónica?</th>
                             <th>Dejar de tomar</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody> <!-- Cuerpo de la tabla donde se llenarán los datos dinámicamente -->
     
                     </tbody>
                 </table>
             </section>
             
-            <section class="user-upcoming-appointments">
-                <h5>Proximas citas:</h5>
-                <!-- <hr> -->
-                <table>
+            <section class="user-upcoming-appointments"> <!-- Sección con las próximas citas -->
+                <h5>Próximas citas:</h5> <!-- Título de la sección -->
+                <!-- <hr> --> <!-- Línea horizontal comentada -->
+                <table> <!-- Tabla para mostrar las próximas citas -->
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -61,16 +65,16 @@
                             <th>Fecha</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody> <!-- Cuerpo de la tabla donde se llenarán los datos dinámicamente -->
                         
                     </tbody>
                 </table>
             </section>
     
-            <section class="user-past-appointments">
-                <h5>Consultas pasadas:</h5>
-                <!-- <hr> -->
-                <table>
+            <section class="user-past-appointments"> <!-- Sección con las citas pasadas -->
+                <h5>Consultas pasadas:</h5> <!-- Título de la sección -->
+                <!-- <hr> --> <!-- Línea horizontal comentada -->
+                <table> <!-- Tabla para mostrar las citas pasadas -->
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -78,45 +82,47 @@
                             <th>Fecha</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody> <!-- Cuerpo de la tabla donde se llenarán los datos dinámicamente -->
                         
                     </tbody>
                 </table>
             </section>
     
-            <button class="user-make-appointment-btn">¡Pedir cita!</button>
+            <button class="user-make-appointment-btn">¡Pedir cita!</button> <!-- Botón para hacer una nueva cita -->
     
         </div>
         
+        <!-- Modal para pedir una nueva cita -->
         <div class="modal" id="modal-new-appointment">
             <div class="modal-content">
-                <span class="close-btn">&times;</span>
+                <span class="close-btn">&times;</span> <!-- Botón para cerrar el modal -->
                 <h2>Pedir Cita</h2>
-                <form>
+                <form> <!-- Formulario para agendar una cita -->
                     <label for="doctor-select">Selecciona un doctor:</label>
-                    <select id="doctor-select" name="doctor">
+                    <select id="doctor-select" name="doctor"> <!-- Selector de médicos disponibles -->
                     </select>
 
                     <label for="appointment-date">Selecciona una fecha y hora:</label>
-                    <input type="datetime-local" id="appointment-date" name="date">
-
-                    <div class="errors">
+                    <input type="datetime-local" id="appointment-date" name="date"> <!-- Campo para seleccionar fecha y hora -->
+                    
+                    <div class="errors"> <!-- Contenedor para mensajes de error -->
                         <span></span>
                     </div>
 
                     <label for="appointment-symptomatology">Sintomatología:</label>
-                    <textarea placeholder="Rellena tu sintomatología de forma opcional" id="appointment-symptomatology" name="symptomatology"></textarea>
+                    <textarea placeholder="Rellena tu sintomatología de forma opcional" id="appointment-symptomatology" name="symptomatology"></textarea> <!-- Campo de texto para la sintomatología -->
                     
-                    <button type="submit" class="modal-submit-btn">Agendar</button>
+                    <button type="submit" class="modal-submit-btn">Agendar</button> <!-- Botón para enviar el formulario -->
                 </form>
             </div>
         </div>
 
+        <!-- Modal para mostrar detalles de citas pasadas -->
         <div class="modal" id="modal-past-appointments">
             <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2 class="modal-title"></h2>
-                <div class="modal-content-info">
+                <span class="close-btn">&times;</span> <!-- Botón para cerrar el modal -->
+                <h2 class="modal-title"></h2> <!-- Título del modal -->
+                <div class="modal-content-info"> <!-- Contenedor con los detalles de la cita -->
                     <p>Doctor: <span class="modal-doctor-name"></span></p>
                     <p>Fecha: <span class="modal-appointment-date"></span></p>
                     <p>Sintomatología: <span class="modal-symptomatology"></span></p>
@@ -127,11 +133,13 @@
             </div>
         </div>
         
-        
-
+        <a class="log-out" href="../index.html"> <!-- Enlace para cerrar sesión -->
+            <img src="../assets/icons/logOut.png" alt="Finalizar sesión"> <!-- Icono para cerrar sesión -->
+        </a>
     </main>
 
-    <script type="module" src="../js/helpers/utils.mjs"></script>
-    <script type="module" src="../js/patient.js"></script>
+    <!-- Enlaces a los archivos JavaScript -->
+    <script type="module" src="../js/helpers/utils.mjs"></script> <!-- Archivo JavaScript con funciones de utilidad -->
+    <script type="module" src="../js/patient.js"></script> <!-- Archivo JavaScript para gestionar la página del paciente -->
 </body>
 </html>

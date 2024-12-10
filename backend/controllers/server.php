@@ -41,7 +41,7 @@ $pdf = array_key_exists('pdf', $_GET) ? true : false;
 
 switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
     case 'GET':
-        if (!empty($userEmail) && !empty($userPassword)) {
+        if (!empty($userEmail) && !empty($userPassword)) { // Inicio de sesión con email y contraseña
             $select_query = "SELECT 'patient' AS role, password, id 
                             FROM patients 
                             WHERE email = '$userEmail'
@@ -62,13 +62,13 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
                 echo json_encode(['error' => "Usuario no encontrado"]);
             }
 
-        } else if (empty($resourceId)) {
+        } else if (empty($resourceId)) { // Obtener todos los registros de un recurso
             $select_query = "SELECT * FROM $resourceType";
 
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else if ($resourceType === 'appointment_medicines') {
+        } else if ($resourceType === 'appointment_medicines') { // Obtener medicamentos de una cita
             $select_query = "SELECT 
                 m.name AS medicine_name,
                 am.quantity,
@@ -88,19 +88,20 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else if ($resourceType === 'appointments' && $appointmentsStatus == 'upcoming') {
-            $select_query = "SELECT id, (SELECT name FROM doctors WHERE id = appointments.doctor_id) as doctor_name, appointment_date FROM $resourceType WHERE is_consultation_done = 0 AND patient_id = $resourceId";
+        } else if ($resourceType === 'appointments' && $appointmentsStatus == 'upcoming') { // Obtener citas pendientes de un paciente
+            $select_query = "SELECT id, (SELECT name FROM doctors WHERE id = appointments.doctor_id) as doctor_name, appointment_date FROM $resourceType WHERE (diagnosis IS NULL OR diagnosis = '') AND patient_id = $resourceId;
+";
 
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else if ($resourceType === 'appointments' && $appointmentsStatus == 'past') {
-            $select_query = "SELECT id, (SELECT name FROM doctors WHERE id = appointments.doctor_id) as doctor_name, appointment_date FROM $resourceType WHERE is_consultation_done = 1 AND patient_id = $resourceId";
+        } else if ($resourceType === 'appointments' && $appointmentsStatus == 'past') { // Obtener citas pasadas de un paciente
+            $select_query = "SELECT id, (SELECT name FROM doctors WHERE id = appointments.doctor_id) as doctor_name, appointment_date FROM $resourceType WHERE (diagnosis IS NULL OR diagnosis = '') AND patient_id = $resourceId";
 
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else if ($resourceType === "appointments" && !empty($resourceId)) {
+        } else if ($resourceType === "appointments" && !empty($resourceId)) { // Obtener detalles de una cita específica
             $select_query = "SELECT 
                                 d.name AS doctor_name,
                                 a.appointment_date,
@@ -121,35 +122,34 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
                             LEFT JOIN 
                                 medicines m ON am.medicine_id = m.id
                             WHERE 
-                                a.is_consultation_done = 1
+                                (diagnosis IS NOT NULL AND diagnosis != '') 
                                 AND a.id = $resourceId;";
 
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
 
-        } else if ($resourceType == "doctor_patients" && !empty($resourceId)) {
+        } else if ($resourceType == "doctor_patients" && !empty($resourceId)) { // Obtener pacientes asignados a un médico
             $select_query = "SELECT doctor_id, (SELECT name FROM doctors WHERE id = doctor_patients.doctor_id) as name, (SELECT specialty FROM doctors WHERE id = doctor_patients.doctor_id) as specialty FROM $resourceType WHERE patient_id = $resourceId";
 
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else if ($resourceType == "appointments_for_doctors_7_days" && !empty($resourceId)) {
+        } else if ($resourceType == "appointments_for_doctors_7_days" && !empty($resourceId)) { // Obtener citas futuras para un médico (7 días)
             $select_query = "SELECT 
                                 id, 
-                                (SELECT name FROM patients WHERE id = appointments.patient_id) AS patient_name, 
-                                symptomatology 
+                                (SELECT name FROM patients WHERE id = appointments.patient_id) AS patient_name, symptomatology, appointment_date
                             FROM 
                                 appointments 
                             WHERE 
                                 doctor_id = $resourceId
-                                AND is_consultation_done = 0
+                                AND (diagnosis IS NULL OR diagnosis = '')
                                 AND appointment_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY);";
 
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else if ($resourceType == "appointments_for_doctors" && !empty($resourceId)) {
+        } else if ($resourceType == "appointments_for_doctors" && !empty($resourceId)) { // Obtener citas para un médico en el día actual
             $select_query = "SELECT 
                                 id, 
                                 (SELECT name FROM patients WHERE id = appointments.patient_id) AS patient_name, 
@@ -158,19 +158,22 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
                                 appointments 
                             WHERE 
                                 doctor_id = $resourceId
-                                AND is_consultation_done = 0
+                                AND (diagnosis IS NULL OR diagnosis = '')
                                 AND DATE(appointment_date) = CURDATE();";
             
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else if ($resourceType == "appointments_by_id" && !empty($resourceId)) {
+        }
+        
+        
+        else if ($resourceType == "appointments_by_id" && !empty($resourceId)) { // Obtener una cita específica por ID
             $select_query = "SELECT patient_id, (SELECT name FROM patients WHERE id = appointments.patient_id) AS doctor_name, (SELECT name FROM doctors WHERE id = appointments.doctor_id) AS patient_name, appointment_date, symptomatology FROM appointments WHERE id = $resourceId;";
 
             $resource = $dbConn->db_query($select_query);
 
             echo json_encode($resource, true);
-        } else {
+        } else { 
             $exists_id_query = "SELECT * FROM $resourceType WHERE id = $resourceId";
             $execute_exists_id_query = $dbConn->db_query($exists_id_query);
             $idExits = count($execute_exists_id_query) > 0 ? true : false;
@@ -185,7 +188,7 @@ switch (strtoupper($_SERVER['REQUEST_METHOD'])) {
         break;
 
     case 'POST':
-        if ($resourceType == "appointments" && !empty($resourceId) && $pdf) {
+        if ($resourceType == "appointments" && !empty($resourceId) && $pdf) { // Subir un archivo PDF para una cita
             // error_log(print_r($_FILES, true));
             $fileTmpPath = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];

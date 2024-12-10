@@ -1,1 +1,7 @@
-mierda/
+backend/controllers/uploads/
+!backend/controllers/uploads/consulta1.pdf
+!backend/controllers/uploads/consulta2.pdf
+!backend/controllers/uploads/consulta3.pdf
+!backend/controllers/uploads/consulta4.pdf
+!backend/controllers/uploads/consulta5.pdf
+!backend/controllers/uploads/consulta6.pdf
